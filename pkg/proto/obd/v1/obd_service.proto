@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package obd.v1;
+
+import "obd/v1/user/create_rpc.proto";
+import "obd/v1/user/login_rpc.proto";
+
+
+// option go_package = "github.com/darwishdev/mln_retail/internal/pb";
+
+service Obd {
+    rpc UserCreate (UserCreateRequest) returns (UserCreateResponse) {  }
+    rpc UserLogin (UserLoginRequest) returns (UserLoginResponse) {  }
+}

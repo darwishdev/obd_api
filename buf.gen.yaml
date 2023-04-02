@@ -1,0 +1,19 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/darwishdev/obd_api/pkg/pb
+plugins:
+  - name: go
+    out: pkg/pb
+    opt: paths=source_relative
+  - name: connect-go
+    out: pkg/pb
+    opt: paths=source_relative
+  # - plugin: es
+  #   out: ../framework/mln-ui-test/src/gen
+  #   opt: target=ts
+  # - plugin: connect-web
+  #   out: ../framework/mln-ui-test/src/gen
+  #   # With target=ts, we generate TypeScript files.
+  #   opt: target=ts
