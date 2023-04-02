@@ -5,7 +5,8 @@ import (
 	"log"
 	"testing"
 
-	"github.com/darwish/obd_api/pkg/util"
+	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/user"
+	"github.com/darwishdev/obd_api/pkg/util"
 
 	"github.com/stretchr/testify/require"
 )
@@ -47,7 +48,7 @@ func TestUserLoginRequestValidation(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(fmt.Sprintf("name=%v", tc.name), func(t *testing.T) {
 
-			err := UserLoginRequestValidation(tc.user)
+			err := factory.UserLoginRequestValidation(tc.user)
 			if tc.expected != nil {
 				require.EqualError(t, err, tc.expected.Error())
 			} else {

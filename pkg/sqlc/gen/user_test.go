@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/darwish/obd_api/pkg/util"
+	"github.com/darwishdev/obd_api/pkg/util"
 )
 
 type userCreateTest struct {

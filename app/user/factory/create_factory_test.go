@@ -6,9 +6,10 @@ import (
 	"testing"
 	"time"
 
-	db "github.com/darwish/obd_api/pkg/sqlc/gen"
-	"github.com/darwish/obd_api/pkg/util"
-	"github.com/darwish/obd_api/pkg/validator"
+	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/user"
+	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
+	"github.com/darwishdev/obd_api/pkg/util"
+	"github.com/darwishdev/obd_api/pkg/validator"
 
 	"github.com/stretchr/testify/require"
 )
@@ -81,10 +82,9 @@ func TestUserCreateRequestValidation(t *testing.T) {
 func TestNewUserFromProto(t *testing.T) {
 	validUser := getValidUserRequest("", "")
 	convertedUser := &db.UserCreateParams{
-		Name:     validUser.Name,
-		Email:    validUser.Email,
-		Phone:    validUser.Phone,
-		Password: validUser.Password,
+		Name:  validUser.Name,
+		Email: validUser.Email,
+		Phone: validUser.Phone,
 	}
 	tests := []newUserFromProtoTest{
 		// Valid user
@@ -104,6 +104,7 @@ func TestNewUserFromProto(t *testing.T) {
 				require.EqualError(t, err, tc.err.Error())
 				require.Nil(t, resp)
 			} else {
+				convertedUser.Password = resp.Password
 				require.NoError(t, err)
 				require.Equal(t, tc.expected, resp)
 			}
@@ -121,7 +122,7 @@ func TestNewUserFromSqlResponse(t *testing.T) {
 	}
 
 	t.Run("test conversion between db and api responses", func(t *testing.T) {
-		resp, err := factory.NewUserFromSqlResponse(validUserResponse)
+		resp, err := factory.NewUserCreateFromSqlResponse(validUserResponse)
 		require.NoError(t, err)
 		require.Equal(t, validUserResponse.Name, resp.User.Name)
 		require.Equal(t, validUserResponse.Email, resp.User.Email)
