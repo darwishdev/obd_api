@@ -11,6 +11,17 @@ message User {
     string password = 5;
     google.protobuf.Timestamp password_changed_at = 6;
     google.protobuf.Timestamp created_at = 7;
-    google.protobuf.Timestamp delete_at = 8;
+    google.protobuf.Timestamp deleted_at = 8;
 }
+
+
+
+
+
+
+
+
+
+
+
 

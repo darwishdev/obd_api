@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package obd.v1;
 import "obd/v1/user/entity.proto";
+import "obd/v1/car/entity.proto";
 import "google/protobuf/timestamp.proto";
 
 message UserLoginRequest {
@@ -12,9 +13,10 @@ message UserLoginRequest {
 
 message UserLoginResponse {
     User user = 1;
-    string session_id = 2;
-    string access_token = 3;
-    string refresh_token = 4;
-    google.protobuf.Timestamp  access_token_expires_at = 5;
-    google.protobuf.Timestamp  refresh_token_expires_at = 6;
+    CarView car = 2;
+    string session_id = 3;
+    string access_token =4;
+    string refresh_token = 5;
+    google.protobuf.Timestamp  access_token_expires_at = 6;
+    google.protobuf.Timestamp  refresh_token_expires_at = 7;
 }

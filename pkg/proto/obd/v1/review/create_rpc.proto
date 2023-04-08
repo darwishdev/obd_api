@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/review/entity.proto";
+
+message ReviewCreateRequest {
+    int64 center_id = 1;
+    string review =2;
+    int64 rate = 3;
+}
+
+
+message ReviewCreateResponse {
+    Review review = 1;
+}
+

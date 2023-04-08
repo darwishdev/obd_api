@@ -35,6 +35,170 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// AreaCreate mocks base method.
+func (m *MockStore) AreaCreate(arg0 context.Context, arg1 string) (db.Area, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AreaCreate", arg0, arg1)
+	ret0, _ := ret[0].(db.Area)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AreaCreate indicates an expected call of AreaCreate.
+func (mr *MockStoreMockRecorder) AreaCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AreaCreate", reflect.TypeOf((*MockStore)(nil).AreaCreate), arg0, arg1)
+}
+
+// AreaDelete mocks base method.
+func (m *MockStore) AreaDelete(arg0 context.Context, arg1 int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AreaDelete", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AreaDelete indicates an expected call of AreaDelete.
+func (mr *MockStoreMockRecorder) AreaDelete(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AreaDelete", reflect.TypeOf((*MockStore)(nil).AreaDelete), arg0, arg1)
+}
+
+// AreasList mocks base method.
+func (m *MockStore) AreasList(arg0 context.Context) ([]db.Area, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AreasList", arg0)
+	ret0, _ := ret[0].([]db.Area)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AreasList indicates an expected call of AreasList.
+func (mr *MockStoreMockRecorder) AreasList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AreasList", reflect.TypeOf((*MockStore)(nil).AreasList), arg0)
+}
+
+// CarBrandModelsList mocks base method.
+func (m *MockStore) CarBrandModelsList(arg0 context.Context, arg1 int64) ([]db.CarBrandModel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CarBrandModelsList", arg0, arg1)
+	ret0, _ := ret[0].([]db.CarBrandModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CarBrandModelsList indicates an expected call of CarBrandModelsList.
+func (mr *MockStoreMockRecorder) CarBrandModelsList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CarBrandModelsList", reflect.TypeOf((*MockStore)(nil).CarBrandModelsList), arg0, arg1)
+}
+
+// CarBrandsList mocks base method.
+func (m *MockStore) CarBrandsList(arg0 context.Context) ([]db.CarBrand, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CarBrandsList", arg0)
+	ret0, _ := ret[0].([]db.CarBrand)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CarBrandsList indicates an expected call of CarBrandsList.
+func (mr *MockStoreMockRecorder) CarBrandsList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CarBrandsList", reflect.TypeOf((*MockStore)(nil).CarBrandsList), arg0)
+}
+
+// CarCreate mocks base method.
+func (m *MockStore) CarCreate(arg0 context.Context, arg1 db.CarCreateParams) (db.Car, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CarCreate", arg0, arg1)
+	ret0, _ := ret[0].(db.Car)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CarCreate indicates an expected call of CarCreate.
+func (mr *MockStoreMockRecorder) CarCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CarCreate", reflect.TypeOf((*MockStore)(nil).CarCreate), arg0, arg1)
+}
+
+// CarUpdate mocks base method.
+func (m *MockStore) CarUpdate(arg0 context.Context, arg1 db.CarUpdateParams) (db.Car, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CarUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.Car)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CarUpdate indicates an expected call of CarUpdate.
+func (mr *MockStoreMockRecorder) CarUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CarUpdate", reflect.TypeOf((*MockStore)(nil).CarUpdate), arg0, arg1)
+}
+
+// CenterCreate mocks base method.
+func (m *MockStore) CenterCreate(arg0 context.Context, arg1 db.CenterCreateParams) (db.Center, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CenterCreate", arg0, arg1)
+	ret0, _ := ret[0].(db.Center)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CenterCreate indicates an expected call of CenterCreate.
+func (mr *MockStoreMockRecorder) CenterCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CenterCreate", reflect.TypeOf((*MockStore)(nil).CenterCreate), arg0, arg1)
+}
+
+// CentersList mocks base method.
+func (m *MockStore) CentersList(arg0 context.Context, arg1 int64) ([]db.Center, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CentersList", arg0, arg1)
+	ret0, _ := ret[0].([]db.Center)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CentersList indicates an expected call of CentersList.
+func (mr *MockStoreMockRecorder) CentersList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CentersList", reflect.TypeOf((*MockStore)(nil).CentersList), arg0, arg1)
+}
+
+// ReviewCreate mocks base method.
+func (m *MockStore) ReviewCreate(arg0 context.Context, arg1 db.ReviewCreateParams) (db.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReviewCreate", arg0, arg1)
+	ret0, _ := ret[0].(db.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReviewCreate indicates an expected call of ReviewCreate.
+func (mr *MockStoreMockRecorder) ReviewCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReviewCreate", reflect.TypeOf((*MockStore)(nil).ReviewCreate), arg0, arg1)
+}
+
+// ReviewsList mocks base method.
+func (m *MockStore) ReviewsList(arg0 context.Context, arg1 db.ReviewsListParams) ([]db.ReviewsListRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReviewsList", arg0, arg1)
+	ret0, _ := ret[0].([]db.ReviewsListRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReviewsList indicates an expected call of ReviewsList.
+func (mr *MockStoreMockRecorder) ReviewsList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReviewsList", reflect.TypeOf((*MockStore)(nil).ReviewsList), arg0, arg1)
+}
+
 // UserCreate mocks base method.
 func (m *MockStore) UserCreate(arg0 context.Context, arg1 db.UserCreateParams) (db.User, error) {
 	m.ctrl.T.Helper()
@@ -66,10 +230,10 @@ func (mr *MockStoreMockRecorder) UserDelete(arg0, arg1 interface{}) *gomock.Call
 }
 
 // UserGet mocks base method.
-func (m *MockStore) UserGet(arg0 context.Context, arg1 int64) (db.User, error) {
+func (m *MockStore) UserGet(arg0 context.Context, arg1 int64) (db.UserInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserGet", arg0, arg1)
-	ret0, _ := ret[0].(db.User)
+	ret0, _ := ret[0].(db.UserInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -81,10 +245,10 @@ func (mr *MockStoreMockRecorder) UserGet(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // UserGetByUsername mocks base method.
-func (m *MockStore) UserGetByUsername(arg0 context.Context, arg1 string) (db.User, error) {
+func (m *MockStore) UserGetByUsername(arg0 context.Context, arg1 string) (db.UserInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserGetByUsername", arg0, arg1)
-	ret0, _ := ret[0].(db.User)
+	ret0, _ := ret[0].(db.UserInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -123,4 +287,34 @@ func (m *MockStore) UsersList(arg0 context.Context, arg1 db.UsersListParams) ([]
 func (mr *MockStoreMockRecorder) UsersList(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UsersList", reflect.TypeOf((*MockStore)(nil).UsersList), arg0, arg1)
+}
+
+// WinchCreate mocks base method.
+func (m *MockStore) WinchCreate(arg0 context.Context, arg1 db.WinchCreateParams) (db.Winch, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WinchCreate", arg0, arg1)
+	ret0, _ := ret[0].(db.Winch)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WinchCreate indicates an expected call of WinchCreate.
+func (mr *MockStoreMockRecorder) WinchCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WinchCreate", reflect.TypeOf((*MockStore)(nil).WinchCreate), arg0, arg1)
+}
+
+// WinchList mocks base method.
+func (m *MockStore) WinchList(arg0 context.Context, arg1 int64) ([]db.WinchListRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WinchList", arg0, arg1)
+	ret0, _ := ret[0].([]db.WinchListRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WinchList indicates an expected call of WinchList.
+func (mr *MockStoreMockRecorder) WinchList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WinchList", reflect.TypeOf((*MockStore)(nil).WinchList), arg0, arg1)
 }

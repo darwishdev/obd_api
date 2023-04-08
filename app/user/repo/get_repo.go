@@ -8,12 +8,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (repo *UserRepo) UserGetByUsername(ctx context.Context, req *string) (*db.User, error) {
-	product, err := repo.store.UserGetByUsername(context.Background(), *req)
-	log.Debug().Str("err", "err").Msg("remove me")
+func (repo *UserRepo) UserGet(ctx context.Context, req *int64) (*db.UserInfo, error) {
+	user, err := repo.store.UserGet(context.Background(), *req)
 	if err != nil {
 		return nil, validator.ParseReadDbErrMsg(err)
 	}
-	return &product, nil
+
+	log.Debug().Interface("user", user).Msg("Delete me")
+	return &user, nil
 
 }

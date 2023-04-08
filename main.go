@@ -42,10 +42,10 @@ func main() {
 	loggerAdapter := zerologadapter.New(log.Logger)
 	conn = sqldblogger.OpenDriver(config.DBSource, conn.Driver(), loggerAdapter)
 	store := db.NewStore(conn)
-	runGrpcHttpServer(config, &store)
+	runGrpcHttpServer(config, store)
 
 }
-func runGrpcHttpServer(config util.Config, store *db.Store) {
+func runGrpcHttpServer(config util.Config, store db.Store) {
 	httpServer, err := gapi.NewGrpcHttpServer(config, store)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot initialize grpc ,HTTP api server:")

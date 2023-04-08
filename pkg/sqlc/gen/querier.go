@@ -9,12 +9,25 @@ import (
 )
 
 type Querier interface {
+	AreaCreate(ctx context.Context, name string) (Area, error)
+	AreaDelete(ctx context.Context, areaID int64) error
+	AreasList(ctx context.Context) ([]Area, error)
+	CarBrandModelsList(ctx context.Context, carBrandID int64) ([]CarBrandModel, error)
+	CarBrandsList(ctx context.Context) ([]CarBrand, error)
+	CarCreate(ctx context.Context, arg CarCreateParams) (Car, error)
+	CarUpdate(ctx context.Context, arg CarUpdateParams) (Car, error)
+	CenterCreate(ctx context.Context, arg CenterCreateParams) (Center, error)
+	CentersList(ctx context.Context, areaID int64) ([]Center, error)
+	ReviewCreate(ctx context.Context, arg ReviewCreateParams) (Review, error)
+	ReviewsList(ctx context.Context, arg ReviewsListParams) ([]ReviewsListRow, error)
 	UserCreate(ctx context.Context, arg UserCreateParams) (User, error)
 	UserDelete(ctx context.Context, userID int64) (User, error)
-	UserGet(ctx context.Context, userID int64) (User, error)
-	UserGetByUsername(ctx context.Context, email string) (User, error)
+	UserGet(ctx context.Context, userID int64) (UserInfo, error)
+	UserGetByUsername(ctx context.Context, email string) (UserInfo, error)
 	UserUpdate(ctx context.Context, arg UserUpdateParams) (User, error)
 	UsersList(ctx context.Context, arg UsersListParams) ([]User, error)
+	WinchCreate(ctx context.Context, arg WinchCreateParams) (Winch, error)
+	WinchList(ctx context.Context, areaID int64) ([]WinchListRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

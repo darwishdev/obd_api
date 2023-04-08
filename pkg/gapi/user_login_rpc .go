@@ -13,6 +13,7 @@ func (server *Server) UserLogin(ctx context.Context, req *connect.Request[obdv1.
 	if err := ctx.Err(); err != nil {
 		return nil, validator.InternalErr(err)
 	}
+
 	resp, err := server.userUsecase.UserLogin(ctx, req.Msg)
 	if err != nil {
 		return nil, err

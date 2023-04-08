@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/user/entity.proto";
+import "obd/v1/car/entity.proto";
+import "google/protobuf/timestamp.proto";
+
+message UserAuthorizeResponse {
+    User user = 1;
+    CarView car = 2;
+}

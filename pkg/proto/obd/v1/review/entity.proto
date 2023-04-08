@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package obd.v1;
+
+import "google/protobuf/timestamp.proto";
+message Review {
+    int64 review_id = 1;
+    int64 user_id = 2;
+    int64 center_id = 3;
+    string review =4;
+    int32 rate = 5;
+    google.protobuf.Timestamp created_at = 6;
+}
+
+message ReviewListRow {
+    string user_name = 1;
+    string center_name = 2;
+    string review =4;
+    int32 rate = 5;
+    google.protobuf.Timestamp created_at = 6;
+}

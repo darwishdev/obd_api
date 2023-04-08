@@ -26,7 +26,7 @@ func userCreateRequestValidation(req *obdv1.UserCreateRequest) error {
 	return nil
 }
 
-func (f UserFactory) NewUserFromProto(req *obdv1.UserCreateRequest) (*db.UserCreateParams, error) {
+func (f *UserFactory) NewUserFromProto(req *obdv1.UserCreateRequest) (*db.UserCreateParams, error) {
 	if err := userCreateRequestValidation(req); err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (f *UserFactory) NewUserCreateFromSqlResponse(resp *db.User) (*obdv1.UserCr
 			Email:     resp.Email,
 			Password:  resp.Password,
 			CreatedAt: timestamppb.New(resp.CreatedAt),
-			DeleteAt:  timestamppb.New(resp.DeletedAt.Time),
+			DeletedAt: timestamppb.New(resp.DeletedAt.Time),
 		},
 	}
 	return serverResp, nil

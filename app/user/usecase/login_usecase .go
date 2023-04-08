@@ -32,6 +32,7 @@ func (u *UserUsecase) UserLogin(ctx context.Context, req *obdv1.UserLoginRequest
 	}
 	accessToken, accessPayload, err := u.tokenMaker.CreateToken(
 		record.Email,
+		record.UserID,
 		u.config.AccessTokenDuration,
 	)
 	if err != nil {
@@ -40,13 +41,14 @@ func (u *UserUsecase) UserLogin(ctx context.Context, req *obdv1.UserLoginRequest
 
 	refreshToken, refreshPayload, err := u.tokenMaker.CreateToken(
 		record.Email,
+		record.UserID,
 		u.config.RefreshTokenDuration,
 	)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create refresh token")
 	}
 
-	resp, err := u.factory.NewUserLoginFromSqlResponse(record)
+	resp, err := u.factory.LoginGrpcFromSql(record)
 	if err != nil {
 		return nil, err
 	}

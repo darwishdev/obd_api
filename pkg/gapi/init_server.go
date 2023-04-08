@@ -56,7 +56,7 @@ func newCORS() *cors.Cors {
 	})
 }
 
-func NewGrpcHttpServer(config util.Config, store *db.Store) (*http.Server, error) {
+func NewGrpcHttpServer(config util.Config, store db.Store) (*http.Server, error) {
 	apiServer, err := newServer(config, store)
 	if err != nil {
 		log.Fatal("cannot initialize grpc api servier:", err)

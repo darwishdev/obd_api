@@ -3,6 +3,7 @@ package validator
 import (
 	"net/mail"
 	"regexp"
+	"time"
 )
 
 var (
@@ -56,4 +57,23 @@ func ValidatePhone(value string) error {
 	}
 	return nil
 
+}
+
+func ValidateUnsignedInt(value int64) error {
+	if value < 0 {
+		return ErrorInvalid()
+	}
+	return nil
+}
+
+func ValidateInt(value int64, minLength int64, maxLength int64) error {
+	if value > maxLength || value < minLength {
+		return ErrorMinMax(float32(minLength), float32(maxLength))
+	}
+	return nil
+}
+func ValidateDate(date time.Time, minYear int, maxYear int) bool {
+	minDate := time.Date(minYear, time.January, 1, 0, 0, 0, 0, time.UTC)
+	maxDate := time.Date(maxYear, time.December, 31, 23, 59, 59, 0, time.UTC)
+	return !date.Before(minDate) && !date.After(maxDate)
 }

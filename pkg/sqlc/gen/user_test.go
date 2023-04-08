@@ -21,6 +21,16 @@ func getValidUser() *UserCreateParams {
 		Password: util.RandomString(10),
 	}
 }
+
+func createNewUser() *User {
+	createdUser, err := testQueries.UserCreate(context.Background(), *getValidUser())
+	if err != nil {
+		return nil
+	}
+
+	return &createdUser
+}
+
 func TestUserCreate(t *testing.T) {
 	// Define a slice of test cases
 	testcases := []userCreateTest{

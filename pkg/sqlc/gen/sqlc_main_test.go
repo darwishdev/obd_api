@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"os"
@@ -12,6 +13,7 @@ import (
 
 var testQueries *Queries
 var testDB *sql.DB
+var area Area
 
 func TestMain(m *testing.M) {
 	config, err := util.LoadConfig("../../../", "test")
@@ -23,8 +25,12 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
-
 	testQueries = New(testDB)
+
+	area, err = testQueries.AreaCreate(context.Background(), getValidArea())
+	if err != nil {
+		log.Fatal("cannot create test area:", err)
+	}
 
 	os.Exit(m.Run())
 }

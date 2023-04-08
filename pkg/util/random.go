@@ -58,3 +58,14 @@ func RandomMoney() float32 {
 func RandomEmail() string {
 	return fmt.Sprintf("%s@email.com", RandomString(6))
 }
+
+func RandomURL() string {
+	return fmt.Sprintf("http://%s.com", RandomString(7))
+}
+func AddressToString(addr Address) string {
+	return fmt.Sprintf("%s, %s, (%f, %f)", addr.StreetAddress, addr.City, addr.Lat, addr.Long)
+}
+
+func RandomAddress() string {
+	return AddressToString(GenerateRandomAddress())
+}

@@ -33,6 +33,10 @@ func ParseWriteDbErrMsg(err *pq.Error) error {
 		return InvalidArgErr(fmt.Errorf("value_too_long_%s", err.Constraint))
 	}
 
+	if strings.Contains(err.Message, "violates foreign key constraint ") {
+		return InternalErr(fmt.Errorf("invalid_%s", err.Constraint))
+	}
+
 	return err
 }
 func ErrorMinMax(min float32, max float32) error {

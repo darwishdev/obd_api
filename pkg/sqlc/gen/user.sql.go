@@ -7,17 +7,14 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const userCreate = `-- name: UserCreate :one
-INSERT INTO users (
-  name,
-  phone,
-  email,
-  password
-) VALUES (
-  $1, $2,$3, $4
-) RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
+INSERT INTO
+  users (name, phone, email, password)
+VALUES
+  ($1, $2, $3, $4) RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
 `
 
 type UserCreateParams struct {
@@ -49,10 +46,12 @@ func (q *Queries) UserCreate(ctx context.Context, arg UserCreateParams) (User, e
 }
 
 const userDelete = `-- name: UserDelete :one
-UPDATE users
-SET deleted_at = now()
-WHERE user_id = $1
-RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
+UPDATE
+  users
+SET
+  deleted_at = now()
+WHERE
+  user_id = $1 RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
 `
 
 func (q *Queries) UserDelete(ctx context.Context, userID int64) (User, error) {
@@ -72,13 +71,17 @@ func (q *Queries) UserDelete(ctx context.Context, userID int64) (User, error) {
 }
 
 const userGet = `-- name: UserGet :one
-SELECT user_id, name, phone, email, password, password_changed_at, created_at, deleted_at FROM users
-WHERE user_id = $1 AND deleted_at IS NULL LIMIT 1
+SELECT
+  user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, brand_name, brand_model_name, model_year, car_created_at
+FROM
+  user_info u
+WHERE
+  u.user_id = $1
 `
 
-func (q *Queries) UserGet(ctx context.Context, userID int64) (User, error) {
+func (q *Queries) UserGet(ctx context.Context, userID int64) (UserInfo, error) {
 	row := q.db.QueryRowContext(ctx, userGet, userID)
-	var i User
+	var i UserInfo
 	err := row.Scan(
 		&i.UserID,
 		&i.Name,
@@ -88,18 +91,27 @@ func (q *Queries) UserGet(ctx context.Context, userID int64) (User, error) {
 		&i.PasswordChangedAt,
 		&i.CreatedAt,
 		&i.DeletedAt,
+		&i.BrandName,
+		&i.BrandModelName,
+		&i.ModelYear,
+		&i.CarCreatedAt,
 	)
 	return i, err
 }
 
 const userGetByUsername = `-- name: UserGetByUsername :one
-SELECT user_id, name, phone, email, password, password_changed_at, created_at, deleted_at FROM users
-WHERE (email = $1 OR phone = $1) AND deleted_at IS NULL
+SELECT
+  user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, brand_name, brand_model_name, model_year, car_created_at
+FROM
+  user_info u
+WHERE
+  email = $1
+  OR phone = $1
 `
 
-func (q *Queries) UserGetByUsername(ctx context.Context, email string) (User, error) {
+func (q *Queries) UserGetByUsername(ctx context.Context, email string) (UserInfo, error) {
 	row := q.db.QueryRowContext(ctx, userGetByUsername, email)
-	var i User
+	var i UserInfo
 	err := row.Scan(
 		&i.UserID,
 		&i.Name,
@@ -109,32 +121,42 @@ func (q *Queries) UserGetByUsername(ctx context.Context, email string) (User, er
 		&i.PasswordChangedAt,
 		&i.CreatedAt,
 		&i.DeletedAt,
+		&i.BrandName,
+		&i.BrandModelName,
+		&i.ModelYear,
+		&i.CarCreatedAt,
 	)
 	return i, err
 }
 
 const userUpdate = `-- name: UserUpdate :one
-UPDATE users
-SET "name" = $2 , "phone" = $3 ,  "email" = $4 , "password" = $5
-WHERE user_id = $1
-RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
+UPDATE
+  users
+SET
+  name = coalesce($1, name),
+  phone = coalesce($2, phone),
+  email = coalesce($3, email),
+  password = coalesce($4, password),
+  password_changed_at = coalesce($4, password_changed_at)
+WHERE
+  user_id = $5 RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
 `
 
 type UserUpdateParams struct {
-	UserID   int64  `json:"user_id"`
-	Name     string `json:"name"`
-	Phone    string `json:"phone"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name     sql.NullString `json:"name"`
+	Phone    sql.NullString `json:"phone"`
+	Email    sql.NullString `json:"email"`
+	Password sql.NullString `json:"password"`
+	UserID   int64          `json:"user_id"`
 }
 
 func (q *Queries) UserUpdate(ctx context.Context, arg UserUpdateParams) (User, error) {
 	row := q.db.QueryRowContext(ctx, userUpdate,
-		arg.UserID,
 		arg.Name,
 		arg.Phone,
 		arg.Email,
 		arg.Password,
+		arg.UserID,
 	)
 	var i User
 	err := row.Scan(
@@ -151,10 +173,16 @@ func (q *Queries) UserUpdate(ctx context.Context, arg UserUpdateParams) (User, e
 }
 
 const usersList = `-- name: UsersList :many
-SELECT user_id, name, phone, email, password, password_changed_at, created_at, deleted_at FROM users WHERE deleted_at IS NULL 
-ORDER BY user_id
-LIMIT $1
-OFFSET $2
+SELECT
+  user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
+FROM
+  users
+WHERE
+  deleted_at IS NULL
+ORDER BY
+  user_id
+LIMIT
+  $1 OFFSET $2
 `
 
 type UsersListParams struct {

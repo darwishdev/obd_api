@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/winch/entity.proto";
+
+
+
+message WinchListRequest {
+    int64 area_id = 1;
+}
+    
+message WinchListResponse {
+    repeated Winch winches = 1;
+}

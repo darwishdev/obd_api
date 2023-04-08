@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package obd.v1;
+
+import "google/protobuf/timestamp.proto";
+message Winch {
+    int64 winch_id = 1;
+    int64 area_id = 2;
+    string name = 3;
+    string phone = 4;
+    string driver_name = 5;
+    string driver_phone = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp deleted_at = 8;
+}

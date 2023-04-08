@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package obd.v1;
+
+import "google/protobuf/timestamp.proto";
+message Center {
+    int64 center_id = 1;
+    string name = 2;
+    string phone = 3;
+    string location = 4;
+    string address = 5;
+    int64 area_id = 6;
+    string lat = 7;
+    string long = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp deleted_at = 10;
+    }

@@ -7,8 +7,11 @@ import (
 
 type UserFactoryInterface interface {
 	NewUserFromProto(req *obdv1.UserCreateRequest) (*db.UserCreateParams, error)
+	AuthorizeGrpcFromSql(resp *db.UserInfo) (*obdv1.UserAuthorizeResponse, error)
 	NewUserCreateFromSqlResponse(req *db.User) (*obdv1.UserCreateResponse, error)
-	NewUserLoginFromSqlResponse(req *db.User) (*obdv1.UserLoginResponse, error)
+	LoginGrpcFromSql(resp *db.UserInfo) (*obdv1.UserLoginResponse, error)
+	NewUserUpdateFromProto(req *obdv1.UserUpdateRequest) (*db.UserUpdateParams, error)
+	NewUserUpdateFromSqlResponse(resp *db.User) (*obdv1.UserUpdateResponse, error)
 	UserLoginRequestValidation(req *obdv1.UserLoginRequest) error
 }
 

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/car/entity.proto";
+
+
+
+message CarCreateRequest {
+    int64 car_brand_model_id = 1;
+    int32 model_year = 2;
+    
+    
+}
+    
+message CarCreateResponse {
+    Car car = 1;
+}

@@ -15,18 +15,19 @@ import (
 
 type UserUsecaseInterface interface {
 	UserCreate(ctx context.Context, req *obdv1.UserCreateRequest) (*obdv1.UserCreateResponse, error)
+	UserAuthorize(ctx context.Context, req int64) (*obdv1.UserAuthorizeResponse, error)
 	UserCreateRequestValidation(req *obdv1.UserCreateRequest) (violations []*errdetails.BadRequest_FieldViolation)
+	UserUpdate(ctx context.Context, req *obdv1.UserUpdateRequest, userId int64) (*obdv1.UserUpdateResponse, error)
 }
 
 type UserUsecase struct {
-	store      *db.Store
 	repo       repo.UserRepoInterface
 	factory    factory.UserFactoryInterface
 	tokenMaker auth.Maker
 	config     util.Config
 }
 
-func NewUserUsecase(store *db.Store, tokenMaker auth.Maker, config util.Config) *UserUsecase {
+func NewUserUsecase(store db.Store, tokenMaker auth.Maker, config util.Config) *UserUsecase {
 	repo := repo.NewUserRepo(store)
 	factory := factory.NewUserFactory()
 	return &UserUsecase{

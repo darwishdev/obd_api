@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/review/entity.proto";
+
+
+
+message ReviewsListRequest {
+    int64 center_id = 1;
+}
+    
+message ReviewsListResponse {
+    repeated ReviewListRow reviews = 1;
+}

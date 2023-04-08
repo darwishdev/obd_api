@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/center/entity.proto";
+
+
+
+message CentersListRequest {
+    int64 area_id = 1;
+}
+    
+message CentersListResponse {
+    repeated Center centers = 1;
+}

@@ -2,13 +2,29 @@ syntax = "proto3";
 
 package obd.v1;
 
+import "obd/v1/user/authorize_rpc.proto";
 import "obd/v1/user/create_rpc.proto";
+import "obd/v1/user/update_rpc.proto";
 import "obd/v1/user/login_rpc.proto";
-
+import "obd/v1/center/list_rpc.proto";
+import "obd/v1/winch/list_rpc.proto";
+import "obd/v1/review/list_rpc.proto";
+import "obd/v1/review/create_rpc.proto";
+import "obd/v1/car/create_rpc.proto";
+import "obd/v1/car/update_rpc.proto";
+import "google/protobuf/empty.proto";
 
 // option go_package = "github.com/darwishdev/mln_retail/internal/pb";
 
 service Obd {
+    rpc CarUpdate (CarUpdateRequest) returns (CarUpdateResponse) {  }
+    rpc CarCreate (CarCreateRequest) returns (CarCreateResponse) {  }
     rpc UserCreate (UserCreateRequest) returns (UserCreateResponse) {  }
+    rpc UserUpdate (UserUpdateRequest) returns (UserUpdateResponse) {  }
+    rpc WinchList (WinchListRequest) returns (WinchListResponse) {  }
+    rpc CentersList (CentersListRequest) returns (CentersListResponse) {  }
+    rpc ReviewsList (ReviewsListRequest) returns (ReviewsListResponse) {  }
+    rpc ReviewCreate (ReviewCreateRequest) returns (ReviewCreateResponse) {  }
     rpc UserLogin (UserLoginRequest) returns (UserLoginResponse) {  }
+    rpc UserAuthorize (google.protobuf.Empty) returns (UserAuthorizeResponse) {  }
 }

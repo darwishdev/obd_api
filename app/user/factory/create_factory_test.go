@@ -9,7 +9,6 @@ import (
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/user"
 	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
 	"github.com/darwishdev/obd_api/pkg/util"
-	"github.com/darwishdev/obd_api/pkg/validator"
 
 	"github.com/stretchr/testify/require"
 )
@@ -43,14 +42,6 @@ func getValidUserRequest(field string, value interface{}) *obdv1.UserCreateReque
 	return validUser
 }
 
-var (
-	ErrInvalidName        = validator.InvalidArgErr(fmt.Errorf("name_%w", validator.ErrorMinMax(float32(3), float32(200))))
-	ErrInvalidPassword    = validator.InvalidArgErr(fmt.Errorf("password_%w", validator.ErrorMinMax(float32(6), float32(200))))
-	ErrInvalidEmailLength = validator.InvalidArgErr(fmt.Errorf("email_%w", validator.ErrorMinMax(float32(3), float32(200))))
-	ErrInvalidEmail       = validator.InvalidArgErr(fmt.Errorf("email_%w", validator.ErrorInvalid()))
-	ErrInvalidPhone       = validator.InvalidArgErr(fmt.Errorf("phone_%w", validator.ErrorInvalid()))
-)
-
 func TestUserCreateRequestValidation(t *testing.T) {
 	tests := []userCreateRequestValidationTest{
 		// Valid user
@@ -67,6 +58,7 @@ func TestUserCreateRequestValidation(t *testing.T) {
 	}
 
 	for _, tc := range tests {
+
 		t.Run(fmt.Sprintf("name=%v", tc.name), func(t *testing.T) {
 
 			err := userCreateRequestValidation(tc.user)
