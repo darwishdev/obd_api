@@ -1,23 +1,22 @@
-Sure, here's an example of what the release notes for the first stable version could look like:
+# OBD Connection API
 
-Release Notes for Version 1.0.0
+This is an API for the OBD connection application. It uses Buf build and Connect build, and the endpoint definitions can be found at [buf.build/ahmeddarwish/obd/docs/main:obd.v1](https://buf.build/ahmeddarwish/obd/docs/main:obd.v1).
 
-New Features:
-    UserCreate: This API allows users to create a new account by providing their name, phone, email, password, car brand model ID, and model year. Returns the user information, the car information, and the login information.
-    UserLogin: This API allows users to log in by providing their email and password. Returns the user information and the login information.
-    UserUpdate: This API allows users to update their information by providing their user ID, name, phone, email, car brand model ID, and model year. Returns the updated user information.
-    UserAuthorize: This API allows authorized users to access certain features of the application.
-    CarBrandsList: This API allows users to get a list of car brands and models.
-    CarCreate: This API allows users to create a new car by providing the user ID, car brand model ID, and model year. Returns the car information.
-    CarUpdate: This API allows users to update their car information by providing the car ID, car brand model ID, and model year. Returns the updated car information.
-    CentersList: This API allows users to get a list of centers.
-    WinchList: This API allows users to get a list of winches.
-    ReviewsList: This API allows users to get a list of reviews.
-    ReviewCreate: This API allows users to create a new review by providing the user ID, center ID, winch ID, rating, and description. Returns the review information.
+The base URL for connecting to the REST endpoints is `obd.exploremelon.com/`.
 
-Bug Fixes:
+All requests are POST requests with the `baseurl/{servicename}` format, and accept JSON bodies like the request message on the documentation link. Responses are also returned in JSON format.
 
-    Fixed an issue with UserUpdate not returning the updated user information.
-    Fixed an issue with CarUpdate not returning the updated car information.
+## Dependencies
 
-We hope you enjoy using Version 1.0.0. As always, if you encounter any issues or have any feedback, please don't hesitate to contact us.
+This project uses SQLC and PostgreSQL for its database.
+
+## Usage
+
+To use this project, clone the repository and run the following commands:
+
+```bash
+# Build the Docker image
+docker build -t obd-connection-api .
+
+# Run the Docker container
+docker run -p 9091:9091 obd-connection-api
