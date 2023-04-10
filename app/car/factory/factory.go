@@ -10,6 +10,7 @@ type CarFactoryInterface interface {
 	CreateGrpcFromSql(req *db.Car) (*obdv1.CarCreateResponse, error)
 	UpdateSqlFromGrpc(req *obdv1.CarUpdateRequest) (*db.CarUpdateParams, error)
 	UpdateGrpcFromSql(req *db.Car) (*obdv1.CarUpdateResponse, error)
+	BrandsListGrpcFromSqlArr(req *[]db.CarBrandsListRow) (*obdv1.BrandsListResponse, error)
 }
 
 type CarFactory struct {

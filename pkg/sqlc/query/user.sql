@@ -1,8 +1,11 @@
 -- name: UserCreate :one
-INSERT INTO
-  users (name, phone, email, password)
-VALUES
-  ($1, $2, $3, $4) RETURNING *;
+SELECT * FROM user_create(
+sqlc.arg('name_arg'),
+sqlc.arg('phone_arg'),
+sqlc.arg('email_arg'),
+sqlc.arg('password_arg'),
+sqlc.arg('car_brand_model_id_arg'),
+sqlc.arg('model_year_arg'));
 
 -- name: UserGet :one
 SELECT

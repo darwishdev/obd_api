@@ -11,27 +11,34 @@ import (
 )
 
 const userCreate = `-- name: UserCreate :one
-INSERT INTO
-  users (name, phone, email, password)
-VALUES
-  ($1, $2, $3, $4) RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
+SELECT user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, brand_name, brand_model_name, model_year, car_created_at FROM user_create(
+$1,
+$2,
+$3,
+$4,
+$5,
+$6)
 `
 
 type UserCreateParams struct {
-	Name     string `json:"name"`
-	Phone    string `json:"phone"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	NameArg            string `json:"name_arg"`
+	PhoneArg           string `json:"phone_arg"`
+	EmailArg           string `json:"email_arg"`
+	PasswordArg        string `json:"password_arg"`
+	CarBrandModelIDArg int32  `json:"car_brand_model_id_arg"`
+	ModelYearArg       int32  `json:"model_year_arg"`
 }
 
-func (q *Queries) UserCreate(ctx context.Context, arg UserCreateParams) (User, error) {
+func (q *Queries) UserCreate(ctx context.Context, arg UserCreateParams) (UserInfo, error) {
 	row := q.db.QueryRowContext(ctx, userCreate,
-		arg.Name,
-		arg.Phone,
-		arg.Email,
-		arg.Password,
+		arg.NameArg,
+		arg.PhoneArg,
+		arg.EmailArg,
+		arg.PasswordArg,
+		arg.CarBrandModelIDArg,
+		arg.ModelYearArg,
 	)
-	var i User
+	var i UserInfo
 	err := row.Scan(
 		&i.UserID,
 		&i.Name,
@@ -41,6 +48,10 @@ func (q *Queries) UserCreate(ctx context.Context, arg UserCreateParams) (User, e
 		&i.PasswordChangedAt,
 		&i.CreatedAt,
 		&i.DeletedAt,
+		&i.BrandName,
+		&i.BrandModelName,
+		&i.ModelYear,
+		&i.CarCreatedAt,
 	)
 	return i, err
 }

@@ -9,6 +9,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+
 	"database/sql"
 
 	_ "github.com/golang/mock/mockgen/model"
@@ -42,8 +46,23 @@ func main() {
 	loggerAdapter := zerologadapter.New(log.Logger)
 	conn = sqldblogger.OpenDriver(config.DBSource, conn.Driver(), loggerAdapter)
 	store := db.NewStore(conn)
+	runDBMigration(config.MigrationURL, config.DBSource)
 	runGrpcHttpServer(config, store)
 
+}
+
+func runDBMigration(migrationURL string, dbSource string) {
+	log.Debug().Str("url", dbSource).Msg("mig")
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Fatal().Err(err).Msg("cannot create new migrate instance")
+	}
+
+	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal().Err(err).Msg("failed to run migrate up")
+	}
+
+	log.Info().Msg("db migrated successfully")
 }
 func runGrpcHttpServer(config util.Config, store db.Store) {
 	httpServer, err := gapi.NewGrpcHttpServer(config, store)

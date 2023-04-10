@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"testing"
-	"time"
 
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/user"
 	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
@@ -105,13 +104,6 @@ func TestNewUserUpdateFromProto(t *testing.T) {
 }
 
 func TestNewUserUpdateFromSqlResponse(t *testing.T) {
-	validUserResponse := &db.User{
-		Name:      util.RandomName(),
-		Email:     util.RandomEmail(),
-		Phone:     util.RandomPhone(),
-		Password:  util.RandomString(6),
-		CreatedAt: time.Now(),
-	}
 
 	t.Run("test conversion between db and api responses", func(t *testing.T) {
 		resp, err := factory.NewUserCreateFromSqlResponse(validUserResponse)

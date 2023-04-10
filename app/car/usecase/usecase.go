@@ -11,6 +11,7 @@ import (
 )
 
 type CarUsecaseInterface interface {
+	BrandsList(ctx context.Context, req *obdv1.BrandsListRequest) (*obdv1.BrandsListResponse, error)
 	CarCreate(ctx context.Context, req *obdv1.CarCreateRequest, userId int64) (*obdv1.CarCreateResponse, error)
 }
 

@@ -7,6 +7,7 @@ import (
 )
 
 type CarRepoInterface interface {
+	BrandsList(ctx context.Context) (*[]db.CarBrandsListRow, error)
 	CarCreate(ctx context.Context, req *db.CarCreateParams) (*db.Car, error)
 	CarUpdate(ctx context.Context, req *db.CarUpdateParams) (*db.Car, error)
 }

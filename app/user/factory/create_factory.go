@@ -3,6 +3,7 @@ package factory
 import (
 	"fmt"
 
+	obdv1car "github.com/darwishdev/obd_api/pkg/pb/obd/v1/car"
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/user"
 	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
 	"github.com/darwishdev/obd_api/pkg/util"
@@ -36,15 +37,17 @@ func (f *UserFactory) NewUserFromProto(req *obdv1.UserCreateRequest) (*db.UserCr
 	}
 
 	resp := &db.UserCreateParams{
-		Name:     req.Name,
-		Phone:    req.Phone,
-		Email:    req.Email,
-		Password: hashedPassword,
+		NameArg:            req.Name,
+		PhoneArg:           req.Phone,
+		EmailArg:           req.Email,
+		PasswordArg:        hashedPassword,
+		CarBrandModelIDArg: int32(req.CarBrandModel),
+		ModelYearArg:       int32(req.CarYear),
 	}
 	return resp, nil
 }
 
-func (f *UserFactory) NewUserCreateFromSqlResponse(resp *db.User) (*obdv1.UserCreateResponse, error) {
+func (f *UserFactory) NewUserCreateFromSqlResponse(resp *db.UserInfo) (*obdv1.UserCreateResponse, error) {
 	serverResp := &obdv1.UserCreateResponse{
 		User: &obdv1.User{
 			Name:      resp.Name,
@@ -53,6 +56,11 @@ func (f *UserFactory) NewUserCreateFromSqlResponse(resp *db.User) (*obdv1.UserCr
 			Password:  resp.Password,
 			CreatedAt: timestamppb.New(resp.CreatedAt),
 			DeletedAt: timestamppb.New(resp.DeletedAt.Time),
+		},
+		Car: &obdv1car.CarView{
+			BrandName:      resp.BrandName.String,
+			BrandModelName: resp.BrandModelName.String,
+			ModelYear:      resp.ModelYear.Int32,
 		},
 	}
 	return serverResp, nil

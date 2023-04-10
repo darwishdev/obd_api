@@ -79,26 +79,11 @@ func (mr *MockStoreMockRecorder) AreasList(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AreasList", reflect.TypeOf((*MockStore)(nil).AreasList), arg0)
 }
 
-// CarBrandModelsList mocks base method.
-func (m *MockStore) CarBrandModelsList(arg0 context.Context, arg1 int64) ([]db.CarBrandModel, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CarBrandModelsList", arg0, arg1)
-	ret0, _ := ret[0].([]db.CarBrandModel)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CarBrandModelsList indicates an expected call of CarBrandModelsList.
-func (mr *MockStoreMockRecorder) CarBrandModelsList(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CarBrandModelsList", reflect.TypeOf((*MockStore)(nil).CarBrandModelsList), arg0, arg1)
-}
-
 // CarBrandsList mocks base method.
-func (m *MockStore) CarBrandsList(arg0 context.Context) ([]db.CarBrand, error) {
+func (m *MockStore) CarBrandsList(arg0 context.Context) ([]db.CarBrandsListRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CarBrandsList", arg0)
-	ret0, _ := ret[0].([]db.CarBrand)
+	ret0, _ := ret[0].([]db.CarBrandsListRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -200,10 +185,10 @@ func (mr *MockStoreMockRecorder) ReviewsList(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // UserCreate mocks base method.
-func (m *MockStore) UserCreate(arg0 context.Context, arg1 db.UserCreateParams) (db.User, error) {
+func (m *MockStore) UserCreate(arg0 context.Context, arg1 db.UserCreateParams) (db.UserInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserCreate", arg0, arg1)
-	ret0, _ := ret[0].(db.User)
+	ret0, _ := ret[0].(db.UserInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

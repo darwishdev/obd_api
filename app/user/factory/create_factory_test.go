@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"testing"
-	"time"
 
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/user"
 	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
@@ -27,10 +26,12 @@ type userCreateRequestValidationTest struct {
 
 func getValidUserRequest(field string, value interface{}) *obdv1.UserCreateRequest {
 	validUser := &obdv1.UserCreateRequest{
-		Name:     util.RandomName(),
-		Email:    util.RandomEmail(),
-		Phone:    util.RandomPhone(),
-		Password: util.RandomString(6),
+		Name:          util.RandomName(),
+		Email:         util.RandomEmail(),
+		Phone:         util.RandomPhone(),
+		Password:      util.RandomString(6),
+		CarBrandModel: 1,
+		CarYear:       2022,
 	}
 	if field != "" {
 		err := util.SetField(validUser, field, value)
@@ -74,9 +75,11 @@ func TestUserCreateRequestValidation(t *testing.T) {
 func TestNewUserFromProto(t *testing.T) {
 	validUser := getValidUserRequest("", "")
 	convertedUser := &db.UserCreateParams{
-		Name:  validUser.Name,
-		Email: validUser.Email,
-		Phone: validUser.Phone,
+		NameArg:            validUser.Name,
+		EmailArg:           validUser.Email,
+		PhoneArg:           validUser.Phone,
+		CarBrandModelIDArg: int32(validUser.CarBrandModel),
+		ModelYearArg:       validUser.CarYear,
 	}
 	tests := []newUserFromProtoTest{
 		// Valid user
@@ -96,22 +99,18 @@ func TestNewUserFromProto(t *testing.T) {
 				require.EqualError(t, err, tc.err.Error())
 				require.Nil(t, resp)
 			} else {
-				convertedUser.Password = resp.Password
 				require.NoError(t, err)
-				require.Equal(t, tc.expected, resp)
+				require.Equal(t, tc.expected.NameArg, resp.NameArg)
+				require.Equal(t, tc.expected.PhoneArg, resp.PhoneArg)
+				require.Equal(t, tc.expected.EmailArg, resp.EmailArg)
+				require.Equal(t, tc.expected.CarBrandModelIDArg, resp.CarBrandModelIDArg)
+				require.Equal(t, tc.expected.ModelYearArg, resp.ModelYearArg)
 			}
 		})
 	}
 }
 
 func TestNewUserFromSqlResponse(t *testing.T) {
-	validUserResponse := &db.User{
-		Name:      util.RandomName(),
-		Email:     util.RandomEmail(),
-		Phone:     util.RandomPhone(),
-		Password:  util.RandomString(6),
-		CreatedAt: time.Now(),
-	}
 
 	t.Run("test conversion between db and api responses", func(t *testing.T) {
 		resp, err := factory.NewUserCreateFromSqlResponse(validUserResponse)
@@ -120,6 +119,9 @@ func TestNewUserFromSqlResponse(t *testing.T) {
 		require.Equal(t, validUserResponse.Email, resp.User.Email)
 		require.Equal(t, validUserResponse.Phone, resp.User.Phone)
 		require.Equal(t, validUserResponse.Password, resp.User.Password)
+		require.Equal(t, validUserResponse.BrandModelName.String, resp.Car.BrandModelName)
+		require.Equal(t, validUserResponse.BrandName.String, resp.Car.BrandName)
+		require.Equal(t, validUserResponse.ModelYear.Int32, resp.Car.ModelYear)
 
 	})
 }

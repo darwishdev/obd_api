@@ -18,6 +18,10 @@ func RandomInt(min, max int64) int64 {
 	return min + rand.Int63n(max-min+1)
 }
 
+func RandomInt32(min, max int32) int32 {
+	return int32(RandomInt(int64(min), int64(max)))
+}
+
 func RandomFloat(min, max int64) float32 {
 	return float32(min + rand.Int63n(max-min+1))
 }
