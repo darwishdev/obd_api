@@ -7,7 +7,7 @@ import (
 )
 
 type UserRepoInterface interface {
-	UserCreate(ctx context.Context, req *db.UserCreateParams) (*db.User, error)
+	UserCreate(ctx context.Context, req *db.UserCreateParams) (*db.UserInfo, error)
 	UserUpdate(ctx context.Context, req *db.UserUpdateParams) (*db.User, error)
 	UserGetByUsername(ctx context.Context, req *string) (*db.UserInfo, error)
 	UserGet(ctx context.Context, req *int64) (*db.UserInfo, error)

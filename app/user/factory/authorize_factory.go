@@ -24,7 +24,6 @@ func (f *UserFactory) AuthorizeGrpcFromSql(resp *db.UserInfo) (*obdv1User.UserAu
 			BrandName:      resp.BrandName.String,
 			BrandModelName: resp.BrandModelName.String,
 			ModelYear:      resp.ModelYear.Int32,
-			CreatedAt:      timestamppb.New(resp.CarCreatedAt.Time),
 		}
 		serverResp.Car = carInfo
 	}

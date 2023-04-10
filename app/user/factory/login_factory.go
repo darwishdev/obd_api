@@ -36,7 +36,6 @@ func (f *UserFactory) LoginGrpcFromSql(resp *db.UserInfo) (*obdv1User.UserLoginR
 			BrandName:      resp.BrandName.String,
 			BrandModelName: resp.BrandModelName.String,
 			ModelYear:      resp.ModelYear.Int32,
-			CreatedAt:      timestamppb.New(resp.CarCreatedAt.Time),
 		}
 		serverResp.Car = carInfo
 	}

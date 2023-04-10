@@ -10,10 +10,9 @@ import (
 )
 
 type carCreateTest struct {
-	name        string
-	input       CarCreateParams
-	expectErr   bool
-	expectedRes Car
+	name      string
+	input     CarCreateParams
+	expectErr bool
 }
 
 // func createNewCar() Car {

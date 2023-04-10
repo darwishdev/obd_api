@@ -33,16 +33,17 @@ const (
 
 // ObdClient is a client for the obd.v1.Obd service.
 type ObdClient interface {
-	CarUpdate(context.Context, *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error)
-	CarCreate(context.Context, *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error)
 	UserCreate(context.Context, *connect_go.Request[user.UserCreateRequest]) (*connect_go.Response[user.UserCreateResponse], error)
+	UserLogin(context.Context, *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error)
 	UserUpdate(context.Context, *connect_go.Request[user.UserUpdateRequest]) (*connect_go.Response[user.UserUpdateResponse], error)
-	WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error)
+	UserAuthorize(context.Context, *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error)
+	CarBrandsList(context.Context, *connect_go.Request[car.BrandsListRequest]) (*connect_go.Response[car.BrandsListResponse], error)
+	CarCreate(context.Context, *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error)
+	CarUpdate(context.Context, *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error)
 	CentersList(context.Context, *connect_go.Request[center.CentersListRequest]) (*connect_go.Response[center.CentersListResponse], error)
+	WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error)
 	ReviewsList(context.Context, *connect_go.Request[review.ReviewsListRequest]) (*connect_go.Response[review.ReviewsListResponse], error)
 	ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error)
-	UserLogin(context.Context, *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error)
-	UserAuthorize(context.Context, *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error)
 }
 
 // NewObdClient constructs a client for the obd.v1.Obd service. By default, it uses the Connect
@@ -55,19 +56,14 @@ type ObdClient interface {
 func NewObdClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) ObdClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &obdClient{
-		carUpdate: connect_go.NewClient[car.CarUpdateRequest, car.CarUpdateResponse](
-			httpClient,
-			baseURL+"/obd.v1.Obd/CarUpdate",
-			opts...,
-		),
-		carCreate: connect_go.NewClient[car.CarCreateRequest, car.CarCreateResponse](
-			httpClient,
-			baseURL+"/obd.v1.Obd/CarCreate",
-			opts...,
-		),
 		userCreate: connect_go.NewClient[user.UserCreateRequest, user.UserCreateResponse](
 			httpClient,
 			baseURL+"/obd.v1.Obd/UserCreate",
+			opts...,
+		),
+		userLogin: connect_go.NewClient[user.UserLoginRequest, user.UserLoginResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/UserLogin",
 			opts...,
 		),
 		userUpdate: connect_go.NewClient[user.UserUpdateRequest, user.UserUpdateResponse](
@@ -75,14 +71,34 @@ func NewObdClient(httpClient connect_go.HTTPClient, baseURL string, opts ...conn
 			baseURL+"/obd.v1.Obd/UserUpdate",
 			opts...,
 		),
-		winchList: connect_go.NewClient[winch.WinchListRequest, winch.WinchListResponse](
+		userAuthorize: connect_go.NewClient[emptypb.Empty, user.UserAuthorizeResponse](
 			httpClient,
-			baseURL+"/obd.v1.Obd/WinchList",
+			baseURL+"/obd.v1.Obd/UserAuthorize",
+			opts...,
+		),
+		carBrandsList: connect_go.NewClient[car.BrandsListRequest, car.BrandsListResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/CarBrandsList",
+			opts...,
+		),
+		carCreate: connect_go.NewClient[car.CarCreateRequest, car.CarCreateResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/CarCreate",
+			opts...,
+		),
+		carUpdate: connect_go.NewClient[car.CarUpdateRequest, car.CarUpdateResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/CarUpdate",
 			opts...,
 		),
 		centersList: connect_go.NewClient[center.CentersListRequest, center.CentersListResponse](
 			httpClient,
 			baseURL+"/obd.v1.Obd/CentersList",
+			opts...,
+		),
+		winchList: connect_go.NewClient[winch.WinchListRequest, winch.WinchListResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/WinchList",
 			opts...,
 		),
 		reviewsList: connect_go.NewClient[review.ReviewsListRequest, review.ReviewsListResponse](
@@ -95,41 +111,22 @@ func NewObdClient(httpClient connect_go.HTTPClient, baseURL string, opts ...conn
 			baseURL+"/obd.v1.Obd/ReviewCreate",
 			opts...,
 		),
-		userLogin: connect_go.NewClient[user.UserLoginRequest, user.UserLoginResponse](
-			httpClient,
-			baseURL+"/obd.v1.Obd/UserLogin",
-			opts...,
-		),
-		userAuthorize: connect_go.NewClient[emptypb.Empty, user.UserAuthorizeResponse](
-			httpClient,
-			baseURL+"/obd.v1.Obd/UserAuthorize",
-			opts...,
-		),
 	}
 }
 
 // obdClient implements ObdClient.
 type obdClient struct {
-	carUpdate     *connect_go.Client[car.CarUpdateRequest, car.CarUpdateResponse]
-	carCreate     *connect_go.Client[car.CarCreateRequest, car.CarCreateResponse]
 	userCreate    *connect_go.Client[user.UserCreateRequest, user.UserCreateResponse]
+	userLogin     *connect_go.Client[user.UserLoginRequest, user.UserLoginResponse]
 	userUpdate    *connect_go.Client[user.UserUpdateRequest, user.UserUpdateResponse]
-	winchList     *connect_go.Client[winch.WinchListRequest, winch.WinchListResponse]
+	userAuthorize *connect_go.Client[emptypb.Empty, user.UserAuthorizeResponse]
+	carBrandsList *connect_go.Client[car.BrandsListRequest, car.BrandsListResponse]
+	carCreate     *connect_go.Client[car.CarCreateRequest, car.CarCreateResponse]
+	carUpdate     *connect_go.Client[car.CarUpdateRequest, car.CarUpdateResponse]
 	centersList   *connect_go.Client[center.CentersListRequest, center.CentersListResponse]
+	winchList     *connect_go.Client[winch.WinchListRequest, winch.WinchListResponse]
 	reviewsList   *connect_go.Client[review.ReviewsListRequest, review.ReviewsListResponse]
 	reviewCreate  *connect_go.Client[review.ReviewCreateRequest, review.ReviewCreateResponse]
-	userLogin     *connect_go.Client[user.UserLoginRequest, user.UserLoginResponse]
-	userAuthorize *connect_go.Client[emptypb.Empty, user.UserAuthorizeResponse]
-}
-
-// CarUpdate calls obd.v1.Obd.CarUpdate.
-func (c *obdClient) CarUpdate(ctx context.Context, req *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error) {
-	return c.carUpdate.CallUnary(ctx, req)
-}
-
-// CarCreate calls obd.v1.Obd.CarCreate.
-func (c *obdClient) CarCreate(ctx context.Context, req *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error) {
-	return c.carCreate.CallUnary(ctx, req)
 }
 
 // UserCreate calls obd.v1.Obd.UserCreate.
@@ -137,19 +134,44 @@ func (c *obdClient) UserCreate(ctx context.Context, req *connect_go.Request[user
 	return c.userCreate.CallUnary(ctx, req)
 }
 
+// UserLogin calls obd.v1.Obd.UserLogin.
+func (c *obdClient) UserLogin(ctx context.Context, req *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error) {
+	return c.userLogin.CallUnary(ctx, req)
+}
+
 // UserUpdate calls obd.v1.Obd.UserUpdate.
 func (c *obdClient) UserUpdate(ctx context.Context, req *connect_go.Request[user.UserUpdateRequest]) (*connect_go.Response[user.UserUpdateResponse], error) {
 	return c.userUpdate.CallUnary(ctx, req)
 }
 
-// WinchList calls obd.v1.Obd.WinchList.
-func (c *obdClient) WinchList(ctx context.Context, req *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error) {
-	return c.winchList.CallUnary(ctx, req)
+// UserAuthorize calls obd.v1.Obd.UserAuthorize.
+func (c *obdClient) UserAuthorize(ctx context.Context, req *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error) {
+	return c.userAuthorize.CallUnary(ctx, req)
+}
+
+// CarBrandsList calls obd.v1.Obd.CarBrandsList.
+func (c *obdClient) CarBrandsList(ctx context.Context, req *connect_go.Request[car.BrandsListRequest]) (*connect_go.Response[car.BrandsListResponse], error) {
+	return c.carBrandsList.CallUnary(ctx, req)
+}
+
+// CarCreate calls obd.v1.Obd.CarCreate.
+func (c *obdClient) CarCreate(ctx context.Context, req *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error) {
+	return c.carCreate.CallUnary(ctx, req)
+}
+
+// CarUpdate calls obd.v1.Obd.CarUpdate.
+func (c *obdClient) CarUpdate(ctx context.Context, req *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error) {
+	return c.carUpdate.CallUnary(ctx, req)
 }
 
 // CentersList calls obd.v1.Obd.CentersList.
 func (c *obdClient) CentersList(ctx context.Context, req *connect_go.Request[center.CentersListRequest]) (*connect_go.Response[center.CentersListResponse], error) {
 	return c.centersList.CallUnary(ctx, req)
+}
+
+// WinchList calls obd.v1.Obd.WinchList.
+func (c *obdClient) WinchList(ctx context.Context, req *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error) {
+	return c.winchList.CallUnary(ctx, req)
 }
 
 // ReviewsList calls obd.v1.Obd.ReviewsList.
@@ -162,28 +184,19 @@ func (c *obdClient) ReviewCreate(ctx context.Context, req *connect_go.Request[re
 	return c.reviewCreate.CallUnary(ctx, req)
 }
 
-// UserLogin calls obd.v1.Obd.UserLogin.
-func (c *obdClient) UserLogin(ctx context.Context, req *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error) {
-	return c.userLogin.CallUnary(ctx, req)
-}
-
-// UserAuthorize calls obd.v1.Obd.UserAuthorize.
-func (c *obdClient) UserAuthorize(ctx context.Context, req *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error) {
-	return c.userAuthorize.CallUnary(ctx, req)
-}
-
 // ObdHandler is an implementation of the obd.v1.Obd service.
 type ObdHandler interface {
-	CarUpdate(context.Context, *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error)
-	CarCreate(context.Context, *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error)
 	UserCreate(context.Context, *connect_go.Request[user.UserCreateRequest]) (*connect_go.Response[user.UserCreateResponse], error)
+	UserLogin(context.Context, *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error)
 	UserUpdate(context.Context, *connect_go.Request[user.UserUpdateRequest]) (*connect_go.Response[user.UserUpdateResponse], error)
-	WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error)
+	UserAuthorize(context.Context, *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error)
+	CarBrandsList(context.Context, *connect_go.Request[car.BrandsListRequest]) (*connect_go.Response[car.BrandsListResponse], error)
+	CarCreate(context.Context, *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error)
+	CarUpdate(context.Context, *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error)
 	CentersList(context.Context, *connect_go.Request[center.CentersListRequest]) (*connect_go.Response[center.CentersListResponse], error)
+	WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error)
 	ReviewsList(context.Context, *connect_go.Request[review.ReviewsListRequest]) (*connect_go.Response[review.ReviewsListResponse], error)
 	ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error)
-	UserLogin(context.Context, *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error)
-	UserAuthorize(context.Context, *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error)
 }
 
 // NewObdHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -193,19 +206,14 @@ type ObdHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewObdHandler(svc ObdHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
 	mux := http.NewServeMux()
-	mux.Handle("/obd.v1.Obd/CarUpdate", connect_go.NewUnaryHandler(
-		"/obd.v1.Obd/CarUpdate",
-		svc.CarUpdate,
-		opts...,
-	))
-	mux.Handle("/obd.v1.Obd/CarCreate", connect_go.NewUnaryHandler(
-		"/obd.v1.Obd/CarCreate",
-		svc.CarCreate,
-		opts...,
-	))
 	mux.Handle("/obd.v1.Obd/UserCreate", connect_go.NewUnaryHandler(
 		"/obd.v1.Obd/UserCreate",
 		svc.UserCreate,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/UserLogin", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/UserLogin",
+		svc.UserLogin,
 		opts...,
 	))
 	mux.Handle("/obd.v1.Obd/UserUpdate", connect_go.NewUnaryHandler(
@@ -213,14 +221,34 @@ func NewObdHandler(svc ObdHandler, opts ...connect_go.HandlerOption) (string, ht
 		svc.UserUpdate,
 		opts...,
 	))
-	mux.Handle("/obd.v1.Obd/WinchList", connect_go.NewUnaryHandler(
-		"/obd.v1.Obd/WinchList",
-		svc.WinchList,
+	mux.Handle("/obd.v1.Obd/UserAuthorize", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/UserAuthorize",
+		svc.UserAuthorize,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/CarBrandsList", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/CarBrandsList",
+		svc.CarBrandsList,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/CarCreate", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/CarCreate",
+		svc.CarCreate,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/CarUpdate", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/CarUpdate",
+		svc.CarUpdate,
 		opts...,
 	))
 	mux.Handle("/obd.v1.Obd/CentersList", connect_go.NewUnaryHandler(
 		"/obd.v1.Obd/CentersList",
 		svc.CentersList,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/WinchList", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/WinchList",
+		svc.WinchList,
 		opts...,
 	))
 	mux.Handle("/obd.v1.Obd/ReviewsList", connect_go.NewUnaryHandler(
@@ -233,44 +261,46 @@ func NewObdHandler(svc ObdHandler, opts ...connect_go.HandlerOption) (string, ht
 		svc.ReviewCreate,
 		opts...,
 	))
-	mux.Handle("/obd.v1.Obd/UserLogin", connect_go.NewUnaryHandler(
-		"/obd.v1.Obd/UserLogin",
-		svc.UserLogin,
-		opts...,
-	))
-	mux.Handle("/obd.v1.Obd/UserAuthorize", connect_go.NewUnaryHandler(
-		"/obd.v1.Obd/UserAuthorize",
-		svc.UserAuthorize,
-		opts...,
-	))
 	return "/obd.v1.Obd/", mux
 }
 
 // UnimplementedObdHandler returns CodeUnimplemented from all methods.
 type UnimplementedObdHandler struct{}
 
-func (UnimplementedObdHandler) CarUpdate(context.Context, *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.CarUpdate is not implemented"))
-}
-
-func (UnimplementedObdHandler) CarCreate(context.Context, *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.CarCreate is not implemented"))
-}
-
 func (UnimplementedObdHandler) UserCreate(context.Context, *connect_go.Request[user.UserCreateRequest]) (*connect_go.Response[user.UserCreateResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.UserCreate is not implemented"))
+}
+
+func (UnimplementedObdHandler) UserLogin(context.Context, *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.UserLogin is not implemented"))
 }
 
 func (UnimplementedObdHandler) UserUpdate(context.Context, *connect_go.Request[user.UserUpdateRequest]) (*connect_go.Response[user.UserUpdateResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.UserUpdate is not implemented"))
 }
 
-func (UnimplementedObdHandler) WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.WinchList is not implemented"))
+func (UnimplementedObdHandler) UserAuthorize(context.Context, *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.UserAuthorize is not implemented"))
+}
+
+func (UnimplementedObdHandler) CarBrandsList(context.Context, *connect_go.Request[car.BrandsListRequest]) (*connect_go.Response[car.BrandsListResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.CarBrandsList is not implemented"))
+}
+
+func (UnimplementedObdHandler) CarCreate(context.Context, *connect_go.Request[car.CarCreateRequest]) (*connect_go.Response[car.CarCreateResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.CarCreate is not implemented"))
+}
+
+func (UnimplementedObdHandler) CarUpdate(context.Context, *connect_go.Request[car.CarUpdateRequest]) (*connect_go.Response[car.CarUpdateResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.CarUpdate is not implemented"))
 }
 
 func (UnimplementedObdHandler) CentersList(context.Context, *connect_go.Request[center.CentersListRequest]) (*connect_go.Response[center.CentersListResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.CentersList is not implemented"))
+}
+
+func (UnimplementedObdHandler) WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.WinchList is not implemented"))
 }
 
 func (UnimplementedObdHandler) ReviewsList(context.Context, *connect_go.Request[review.ReviewsListRequest]) (*connect_go.Response[review.ReviewsListResponse], error) {
@@ -279,12 +309,4 @@ func (UnimplementedObdHandler) ReviewsList(context.Context, *connect_go.Request[
 
 func (UnimplementedObdHandler) ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.ReviewCreate is not implemented"))
-}
-
-func (UnimplementedObdHandler) UserLogin(context.Context, *connect_go.Request[user.UserLoginRequest]) (*connect_go.Response[user.UserLoginResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.UserLogin is not implemented"))
-}
-
-func (UnimplementedObdHandler) UserAuthorize(context.Context, *connect_go.Request[emptypb.Empty]) (*connect_go.Response[user.UserAuthorizeResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.UserAuthorize is not implemented"))
 }

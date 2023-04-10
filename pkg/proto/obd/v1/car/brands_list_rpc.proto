@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/car/entity.proto";
+
+
+
+message BrandsListRequest {}
+    
+message BrandsListRow {
+    string name = 1;
+    repeated CarBrandModel models = 2;
+}
+
+
+message BrandsListResponse {
+    repeated BrandsListRow brands = 1;
+}

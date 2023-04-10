@@ -5,7 +5,6 @@ import (
 
 	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
 	"github.com/darwishdev/obd_api/pkg/validator"
-	"github.com/rs/zerolog/log"
 )
 
 func (repo *UserRepo) UserGet(ctx context.Context, req *int64) (*db.UserInfo, error) {
@@ -14,7 +13,6 @@ func (repo *UserRepo) UserGet(ctx context.Context, req *int64) (*db.UserInfo, er
 		return nil, validator.ParseReadDbErrMsg(err)
 	}
 
-	log.Debug().Interface("user", user).Msg("Delete me")
 	return &user, nil
 
 }

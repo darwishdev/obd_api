@@ -10,53 +10,40 @@ import (
 	"database/sql"
 )
 
-const carBrandModelsList = `-- name: CarBrandModelsList :many
-SELECT car_brand_model_id, name, start_year, end_year, car_brand_id FROM car_brand_models WHERE  car_brand_id = $1
+const carBrandsList = `-- name: CarBrandsList :many
+SELECT
+    b.name,
+    m.car_brand_model_id,
+    m.name model_name,
+    m.years
+FROM
+    car_brand_models m
+    JOIN car_brands b
+    ON b.car_brand_id= m.car_brand_id
 `
 
-func (q *Queries) CarBrandModelsList(ctx context.Context, carBrandID int64) ([]CarBrandModel, error) {
-	rows, err := q.db.QueryContext(ctx, carBrandModelsList, carBrandID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []CarBrandModel{}
-	for rows.Next() {
-		var i CarBrandModel
-		if err := rows.Scan(
-			&i.CarBrandModelID,
-			&i.Name,
-			&i.StartYear,
-			&i.EndYear,
-			&i.CarBrandID,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+type CarBrandsListRow struct {
+	Name            string `json:"name"`
+	CarBrandModelID int64  `json:"car_brand_model_id"`
+	ModelName       string `json:"model_name"`
+	Years           string `json:"years"`
 }
 
-const carBrandsList = `-- name: CarBrandsList :many
-SELECT car_brand_id, name FROM car_brands
-`
-
-func (q *Queries) CarBrandsList(ctx context.Context) ([]CarBrand, error) {
+func (q *Queries) CarBrandsList(ctx context.Context) ([]CarBrandsListRow, error) {
 	rows, err := q.db.QueryContext(ctx, carBrandsList)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []CarBrand{}
+	items := []CarBrandsListRow{}
 	for rows.Next() {
-		var i CarBrand
-		if err := rows.Scan(&i.CarBrandID, &i.Name); err != nil {
+		var i CarBrandsListRow
+		if err := rows.Scan(
+			&i.Name,
+			&i.CarBrandModelID,
+			&i.ModelName,
+			&i.Years,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -102,12 +89,16 @@ func (q *Queries) CarCreate(ctx context.Context, arg CarCreateParams) (Car, erro
 }
 
 const carUpdate = `-- name: CarUpdate :one
-UPDATE cars 
+UPDATE
+    cars
 SET
-    car_brand_model_id =coalesce($1, car_brand_model_id),
-    model_year =coalesce($2, model_year)
-    WHERE car_id = $3
-    RETURNING car_id, car_brand_model_id, user_id, model_year, created_at, deleted_at
+    car_brand_model_id = coalesce(
+        $1,
+        car_brand_model_id
+    ),
+    model_year = coalesce($2, model_year)
+WHERE
+    car_id = $3 RETURNING car_id, car_brand_model_id, user_id, model_year, created_at, deleted_at
 `
 
 type CarUpdateParams struct {

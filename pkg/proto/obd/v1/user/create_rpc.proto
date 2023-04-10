@@ -2,16 +2,21 @@ syntax = "proto3";
 
 package obd.v1;
 import "obd/v1/user/entity.proto";
+import "obd/v1/car/entity.proto";
 
 message UserCreateRequest {
     string name = 1;
     string phone = 2;
     string email = 3;
     string password = 4;
+    int64 car_brand_model = 5;
+    int32 car_year = 6;
 }
 
 
 message UserCreateResponse {
     User user = 1;
+    CarView car = 2;
+    LoginInfo login_info = 3;
 }
 

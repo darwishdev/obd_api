@@ -1,0 +1,5 @@
+DELETE FROM TABLE areas;
+DELETE FROM TABLE car_brands;
+DELETE FROM TABLE car_brand_models;
+DELETE FROM TABLE centers;
+DELETE FROM TABLE winch;

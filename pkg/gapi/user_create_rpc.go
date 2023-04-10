@@ -17,5 +17,6 @@ func (server *Server) UserCreate(ctx context.Context, req *connect.Request[obdv1
 	if err != nil {
 		return nil, err
 	}
+
 	return connect.NewResponse(resp), nil
 }

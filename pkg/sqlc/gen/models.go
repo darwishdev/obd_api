@@ -29,11 +29,10 @@ type CarBrand struct {
 }
 
 type CarBrandModel struct {
-	CarBrandModelID int64        `json:"car_brand_model_id"`
-	Name            string       `json:"name"`
-	StartYear       time.Time    `json:"start_year"`
-	EndYear         sql.NullTime `json:"end_year"`
-	CarBrandID      int64        `json:"car_brand_id"`
+	CarBrandModelID int64  `json:"car_brand_model_id"`
+	Name            string `json:"name"`
+	Years           string `json:"years"`
+	CarBrandID      int64  `json:"car_brand_id"`
 }
 
 type CarInfo struct {

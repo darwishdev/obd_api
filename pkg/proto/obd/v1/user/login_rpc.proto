@@ -14,9 +14,5 @@ message UserLoginRequest {
 message UserLoginResponse {
     User user = 1;
     CarView car = 2;
-    string session_id = 3;
-    string access_token =4;
-    string refresh_token = 5;
-    google.protobuf.Timestamp  access_token_expires_at = 6;
-    google.protobuf.Timestamp  refresh_token_expires_at = 7;
+    LoginInfo login_info = 3;
 }

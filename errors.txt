@@ -1,0 +1,4 @@
+404:not found
+409:conflict , ex:entered already existed email or phone number
+400:bad request , [validation errors , no rows found ex:entering unexisted email on login]
+401:unauthorize [invalide token , expired token]
