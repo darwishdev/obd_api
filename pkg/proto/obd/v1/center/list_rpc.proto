@@ -6,9 +6,10 @@ import "obd/v1/center/entity.proto";
 
 
 message CentersListRequest {
-    int64 area_id = 1;
+    float lat = 1;
+    float long = 2;
 }
     
 message CentersListResponse {
-    repeated Center centers = 1;
+    repeated CenterListRow centers = 1;
 }

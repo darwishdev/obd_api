@@ -1,7 +1,7 @@
 include app.env
 
 sqlc:
-	sqlc generate
+	rm -rf pkg/sqlc/gen/*.sql.go && sqlc generate
 
 run:
 	fresh

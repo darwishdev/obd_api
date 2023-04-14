@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/session/entity.proto";
+
+
+
+message SessionsListRequest {
+    int64 center_id = 1;
+}
+    
+message SessionsListResponse {
+    repeated Session sessions = 1;
+}

@@ -8,8 +8,9 @@ import "obd/v1/car/entity.proto";
 message BrandsListRequest {}
     
 message BrandsListRow {
-    string name = 1;
-    repeated CarBrandModel models = 2;
+    int32 car_brand_id = 1;
+    string name = 2;
+    repeated CarBrandModel models = 3;
 }
 
 

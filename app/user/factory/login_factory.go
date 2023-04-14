@@ -33,9 +33,12 @@ func (f *UserFactory) LoginGrpcFromSql(resp *db.UserInfo) (*obdv1User.UserLoginR
 	}
 	if resp.BrandName.Valid {
 		carInfo := &obdv1Car.CarView{
-			BrandName:      resp.BrandName.String,
-			BrandModelName: resp.BrandModelName.String,
-			ModelYear:      resp.ModelYear.Int32,
+			CarId:           int32(resp.CarID.Int64),
+			CarBrandId:      int32(resp.CarBrandID.Int64),
+			CarBrandModelId: int32(resp.CarBrandModelID.Int64),
+			BrandName:       resp.BrandName.String,
+			BrandModelName:  resp.BrandModelName.String,
+			ModelYear:       resp.ModelYear.Int32,
 		}
 		serverResp.Car = carInfo
 	}

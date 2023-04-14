@@ -7,7 +7,7 @@ import (
 )
 
 type CenterRepoInterface interface {
-	CentersList(ctx context.Context, req *int64) (*[]db.Center, error)
+	CentersList(ctx context.Context, req *db.CentersListParams) (*[]db.CenterInfo, error)
 }
 
 type CenterRepo struct {

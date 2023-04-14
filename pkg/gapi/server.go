@@ -6,6 +6,7 @@ import (
 	carUsecase "github.com/darwishdev/obd_api/app/car/usecase"
 	centerUsecase "github.com/darwishdev/obd_api/app/center/usecase"
 	reviewUsecase "github.com/darwishdev/obd_api/app/review/usecase"
+	sessionUsecase "github.com/darwishdev/obd_api/app/session/usecase"
 	userUsecase "github.com/darwishdev/obd_api/app/user/usecase"
 	winchUsecase "github.com/darwishdev/obd_api/app/winch/usecase"
 	auth "github.com/darwishdev/obd_api/pkg/auth"
@@ -18,14 +19,15 @@ import (
 // Server serves gRPC requests for our banking service.
 type Server struct {
 	obdv1connect.UnimplementedObdHandler
-	config        util.Config
-	store         db.Store
-	tokenMaker    auth.Maker
-	userUsecase   *userUsecase.UserUsecase
-	centerUsecase *centerUsecase.CenterUsecase
-	reviewUsecase *reviewUsecase.ReviewUsecase
-	carUsecase    *carUsecase.CarUsecase
-	winchUsecase  *winchUsecase.WinchUsecase
+	config         util.Config
+	store          db.Store
+	tokenMaker     auth.Maker
+	userUsecase    *userUsecase.UserUsecase
+	centerUsecase  *centerUsecase.CenterUsecase
+	reviewUsecase  *reviewUsecase.ReviewUsecase
+	carUsecase     *carUsecase.CarUsecase
+	sessionUsecase *sessionUsecase.SessionUsecase
+	winchUsecase   *winchUsecase.WinchUsecase
 }
 
 // NewServer creates a new gRPC server.
@@ -38,14 +40,15 @@ func newServer(config util.Config, store db.Store) (obdv1connect.ObdHandler, err
 	// appErrors := errors.NewAppErrors()
 
 	server := &Server{
-		config:        config,
-		store:         store,
-		tokenMaker:    tokenMaker,
-		userUsecase:   userUsecase.NewUserUsecase(store, tokenMaker, config),
-		centerUsecase: centerUsecase.NewCenterUsecase(store),
-		carUsecase:    carUsecase.NewCarUsecase(store),
-		reviewUsecase: reviewUsecase.NewReviewUsecase(store),
-		winchUsecase:  winchUsecase.NewWinchUsecase(store),
+		config:         config,
+		store:          store,
+		tokenMaker:     tokenMaker,
+		userUsecase:    userUsecase.NewUserUsecase(store, tokenMaker, config),
+		centerUsecase:  centerUsecase.NewCenterUsecase(store),
+		sessionUsecase: sessionUsecase.NewSessionUsecase(store),
+		carUsecase:     carUsecase.NewCarUsecase(store),
+		reviewUsecase:  reviewUsecase.NewReviewUsecase(store),
+		winchUsecase:   winchUsecase.NewWinchUsecase(store),
 	}
 
 	return server, nil

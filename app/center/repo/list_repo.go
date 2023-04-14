@@ -8,7 +8,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (repo *CenterRepo) CentersList(ctx context.Context, req *int64) (*[]db.Center, error) {
+func (repo *CenterRepo) CentersList(ctx context.Context, req *db.CentersListParams) (*[]db.CenterInfo, error) {
 	centers, err := repo.store.CentersList(context.Background(), *req)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok {

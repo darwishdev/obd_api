@@ -12,6 +12,7 @@ import (
 	car "github.com/darwishdev/obd_api/pkg/pb/obd/v1/car"
 	center "github.com/darwishdev/obd_api/pkg/pb/obd/v1/center"
 	review "github.com/darwishdev/obd_api/pkg/pb/obd/v1/review"
+	session "github.com/darwishdev/obd_api/pkg/pb/obd/v1/session"
 	user "github.com/darwishdev/obd_api/pkg/pb/obd/v1/user"
 	winch "github.com/darwishdev/obd_api/pkg/pb/obd/v1/winch"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -44,6 +45,10 @@ type ObdClient interface {
 	WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error)
 	ReviewsList(context.Context, *connect_go.Request[review.ReviewsListRequest]) (*connect_go.Response[review.ReviewsListResponse], error)
 	ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error)
+	SessionCreate(context.Context, *connect_go.Request[session.SessionCreateRequest]) (*connect_go.Response[session.SessionCreateResponse], error)
+	SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error)
+	SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error)
+	SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error)
 }
 
 // NewObdClient constructs a client for the obd.v1.Obd service. By default, it uses the Connect
@@ -111,22 +116,46 @@ func NewObdClient(httpClient connect_go.HTTPClient, baseURL string, opts ...conn
 			baseURL+"/obd.v1.Obd/ReviewCreate",
 			opts...,
 		),
+		sessionCreate: connect_go.NewClient[session.SessionCreateRequest, session.SessionCreateResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/SessionCreate",
+			opts...,
+		),
+		sessionAttachCode: connect_go.NewClient[session.SessionAttachCodeRequest, session.SessionAttachCodeResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/SessionAttachCode",
+			opts...,
+		),
+		sessionAttachValue: connect_go.NewClient[session.SessionAttachValueRequest, session.SessionAttachValueResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/SessionAttachValue",
+			opts...,
+		),
+		sessionsList: connect_go.NewClient[session.SessionsListRequest, session.SessionsListResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/SessionsList",
+			opts...,
+		),
 	}
 }
 
 // obdClient implements ObdClient.
 type obdClient struct {
-	userCreate    *connect_go.Client[user.UserCreateRequest, user.UserCreateResponse]
-	userLogin     *connect_go.Client[user.UserLoginRequest, user.UserLoginResponse]
-	userUpdate    *connect_go.Client[user.UserUpdateRequest, user.UserUpdateResponse]
-	userAuthorize *connect_go.Client[emptypb.Empty, user.UserAuthorizeResponse]
-	carBrandsList *connect_go.Client[car.BrandsListRequest, car.BrandsListResponse]
-	carCreate     *connect_go.Client[car.CarCreateRequest, car.CarCreateResponse]
-	carUpdate     *connect_go.Client[car.CarUpdateRequest, car.CarUpdateResponse]
-	centersList   *connect_go.Client[center.CentersListRequest, center.CentersListResponse]
-	winchList     *connect_go.Client[winch.WinchListRequest, winch.WinchListResponse]
-	reviewsList   *connect_go.Client[review.ReviewsListRequest, review.ReviewsListResponse]
-	reviewCreate  *connect_go.Client[review.ReviewCreateRequest, review.ReviewCreateResponse]
+	userCreate         *connect_go.Client[user.UserCreateRequest, user.UserCreateResponse]
+	userLogin          *connect_go.Client[user.UserLoginRequest, user.UserLoginResponse]
+	userUpdate         *connect_go.Client[user.UserUpdateRequest, user.UserUpdateResponse]
+	userAuthorize      *connect_go.Client[emptypb.Empty, user.UserAuthorizeResponse]
+	carBrandsList      *connect_go.Client[car.BrandsListRequest, car.BrandsListResponse]
+	carCreate          *connect_go.Client[car.CarCreateRequest, car.CarCreateResponse]
+	carUpdate          *connect_go.Client[car.CarUpdateRequest, car.CarUpdateResponse]
+	centersList        *connect_go.Client[center.CentersListRequest, center.CentersListResponse]
+	winchList          *connect_go.Client[winch.WinchListRequest, winch.WinchListResponse]
+	reviewsList        *connect_go.Client[review.ReviewsListRequest, review.ReviewsListResponse]
+	reviewCreate       *connect_go.Client[review.ReviewCreateRequest, review.ReviewCreateResponse]
+	sessionCreate      *connect_go.Client[session.SessionCreateRequest, session.SessionCreateResponse]
+	sessionAttachCode  *connect_go.Client[session.SessionAttachCodeRequest, session.SessionAttachCodeResponse]
+	sessionAttachValue *connect_go.Client[session.SessionAttachValueRequest, session.SessionAttachValueResponse]
+	sessionsList       *connect_go.Client[session.SessionsListRequest, session.SessionsListResponse]
 }
 
 // UserCreate calls obd.v1.Obd.UserCreate.
@@ -184,6 +213,26 @@ func (c *obdClient) ReviewCreate(ctx context.Context, req *connect_go.Request[re
 	return c.reviewCreate.CallUnary(ctx, req)
 }
 
+// SessionCreate calls obd.v1.Obd.SessionCreate.
+func (c *obdClient) SessionCreate(ctx context.Context, req *connect_go.Request[session.SessionCreateRequest]) (*connect_go.Response[session.SessionCreateResponse], error) {
+	return c.sessionCreate.CallUnary(ctx, req)
+}
+
+// SessionAttachCode calls obd.v1.Obd.SessionAttachCode.
+func (c *obdClient) SessionAttachCode(ctx context.Context, req *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error) {
+	return c.sessionAttachCode.CallUnary(ctx, req)
+}
+
+// SessionAttachValue calls obd.v1.Obd.SessionAttachValue.
+func (c *obdClient) SessionAttachValue(ctx context.Context, req *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error) {
+	return c.sessionAttachValue.CallUnary(ctx, req)
+}
+
+// SessionsList calls obd.v1.Obd.SessionsList.
+func (c *obdClient) SessionsList(ctx context.Context, req *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error) {
+	return c.sessionsList.CallUnary(ctx, req)
+}
+
 // ObdHandler is an implementation of the obd.v1.Obd service.
 type ObdHandler interface {
 	UserCreate(context.Context, *connect_go.Request[user.UserCreateRequest]) (*connect_go.Response[user.UserCreateResponse], error)
@@ -197,6 +246,10 @@ type ObdHandler interface {
 	WinchList(context.Context, *connect_go.Request[winch.WinchListRequest]) (*connect_go.Response[winch.WinchListResponse], error)
 	ReviewsList(context.Context, *connect_go.Request[review.ReviewsListRequest]) (*connect_go.Response[review.ReviewsListResponse], error)
 	ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error)
+	SessionCreate(context.Context, *connect_go.Request[session.SessionCreateRequest]) (*connect_go.Response[session.SessionCreateResponse], error)
+	SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error)
+	SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error)
+	SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error)
 }
 
 // NewObdHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -261,6 +314,26 @@ func NewObdHandler(svc ObdHandler, opts ...connect_go.HandlerOption) (string, ht
 		svc.ReviewCreate,
 		opts...,
 	))
+	mux.Handle("/obd.v1.Obd/SessionCreate", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionCreate",
+		svc.SessionCreate,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/SessionAttachCode", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionAttachCode",
+		svc.SessionAttachCode,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/SessionAttachValue", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionAttachValue",
+		svc.SessionAttachValue,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/SessionsList", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionsList",
+		svc.SessionsList,
+		opts...,
+	))
 	return "/obd.v1.Obd/", mux
 }
 
@@ -309,4 +382,20 @@ func (UnimplementedObdHandler) ReviewsList(context.Context, *connect_go.Request[
 
 func (UnimplementedObdHandler) ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.ReviewCreate is not implemented"))
+}
+
+func (UnimplementedObdHandler) SessionCreate(context.Context, *connect_go.Request[session.SessionCreateRequest]) (*connect_go.Response[session.SessionCreateResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionCreate is not implemented"))
+}
+
+func (UnimplementedObdHandler) SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionAttachCode is not implemented"))
+}
+
+func (UnimplementedObdHandler) SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionAttachValue is not implemented"))
+}
+
+func (UnimplementedObdHandler) SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionsList is not implemented"))
 }

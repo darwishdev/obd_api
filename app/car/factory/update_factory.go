@@ -42,9 +42,9 @@ func (f *CarFactory) UpdateSqlFromGrpc(req *obdv1.CarUpdateRequest) (*db.CarUpda
 func (f *CarFactory) UpdateGrpcFromSql(req *db.Car) (*obdv1.CarUpdateResponse, error) {
 	response := &obdv1.CarUpdateResponse{
 		Car: &obdv1.Car{
-			CarId:           req.CarID,
-			CarBrandModelId: req.CarBrandModelID,
-			UserId:          req.UserID,
+			CarId:           int32(req.CarID),
+			CarBrandModelId: int32(req.CarBrandModelID),
+			UserId:          int32(req.UserID),
 			ModelYear:       req.ModelYear,
 			CreatedAt:       timestamppb.New(req.CreatedAt),
 		},
