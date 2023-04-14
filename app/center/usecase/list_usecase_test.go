@@ -22,8 +22,8 @@ func TestCentersList(t *testing.T) {
 			Location:  "location 1",
 			Address:   "address 1",
 			AreaID:    1,
-			Lat:       "123.456",
-			Long:      "456.789",
+			Lat:       123.456,
+			Long:      456.789,
 			CreatedAt: time.Now(),
 		},
 		{
@@ -33,8 +33,8 @@ func TestCentersList(t *testing.T) {
 			Location:  "location 2",
 			Address:   "address 2",
 			AreaID:    1,
-			Lat:       "123.456",
-			Long:      "456.789",
+			Lat:       123.456,
+			Long:      456.789,
 			CreatedAt: time.Now(),
 		},
 	}

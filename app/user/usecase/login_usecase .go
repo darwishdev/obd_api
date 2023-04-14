@@ -10,10 +10,11 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (u *UserUsecase) generateUserToken(email string, userID int64) *obdv1.LoginInfo {
+func (u *UserUsecase) generateUserToken(email string, userID int64, carID int64) *obdv1.LoginInfo {
 	accessToken, accessPayload, err := u.tokenMaker.CreateToken(
 		email,
 		userID,
+		carID,
 		u.config.AccessTokenDuration,
 	)
 	if err != nil {
@@ -23,6 +24,7 @@ func (u *UserUsecase) generateUserToken(email string, userID int64) *obdv1.Login
 	refreshToken, refreshPayload, err := u.tokenMaker.CreateToken(
 		email,
 		userID,
+		carID,
 		u.config.RefreshTokenDuration,
 	)
 	if err != nil {
@@ -55,6 +57,6 @@ func (u *UserUsecase) UserLogin(ctx context.Context, req *obdv1.UserLoginRequest
 	if err != nil {
 		return nil, err
 	}
-	resp.LoginInfo = u.generateUserToken(record.Email, record.UserID)
+	resp.LoginInfo = u.generateUserToken(record.Email, record.UserID, record.CarID.Int64)
 	return resp, nil
 }

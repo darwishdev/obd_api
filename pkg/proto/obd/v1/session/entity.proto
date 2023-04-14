@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package obd.v1;
+
+import "google/protobuf/timestamp.proto";
+message Session {
+    int32 session_id = 1;
+    int32 car_id = 2;
+    bool is_live = 3;
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp finished_at = 5;
+}
+
+
+message Code {
+    int32 code_id = 1;
+    int32 car_brand_model_id = 2;
+    string code_name = 3;
+    string description = 4;
+    bool is_emergency = 5;
+}
+
+message SessionValue {
+    int32 session_value_id = 1;
+    int32 session_id = 2;
+    string value_key = 3;
+    string value_data = 4;
+}
+
+
+message SessionCode {
+    int32 session_code_id = 1;
+    int32 session_id = 2;
+    int32 code_id = 3;
+}

@@ -1,20 +1,14 @@
-
-DROP TABLE IF EXISTS  "users";
-DROP TABLE IF EXISTS  "branches";
-DROP TABLE IF EXISTS  "sessions";
-DROP TABLE IF EXISTS  "products";
-DROP TABLE IF EXISTS  "orders";
-DROP TABLE IF EXISTS  "order_products";
-
-
-
-
-
-
-
-
-
-
+DROP TABLE IF EXISTS "areas";
+DROP TABLE IF EXISTS "users";
+DROP TABLE IF EXISTS "car_brands";
+DROP TABLE IF EXISTS "car_brand_models";
+DROP TABLE IF EXISTS "cars";
+DROP TABLE IF EXISTS "centers";
+DROP TABLE IF EXISTS "reviews";
+DROP TABLE IF EXISTS "sessions";
+DROP TABLE IF EXISTS "codes";
+DROP TABLE IF EXISTS "session_codes";
+DROP TABLE IF EXISTS "winch";
 
 
 

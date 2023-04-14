@@ -11,7 +11,7 @@ import (
 )
 
 const userCreate = `-- name: UserCreate :one
-SELECT user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, brand_name, brand_model_name, model_year, car_created_at FROM user_create(
+SELECT user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, car_user_id, car_id, car_brand_model_id, car_brand_id, brand_name, brand_model_name, model_year FROM user_create(
 $1,
 $2,
 $3,
@@ -48,10 +48,13 @@ func (q *Queries) UserCreate(ctx context.Context, arg UserCreateParams) (UserInf
 		&i.PasswordChangedAt,
 		&i.CreatedAt,
 		&i.DeletedAt,
+		&i.CarUserID,
+		&i.CarID,
+		&i.CarBrandModelID,
+		&i.CarBrandID,
 		&i.BrandName,
 		&i.BrandModelName,
 		&i.ModelYear,
-		&i.CarCreatedAt,
 	)
 	return i, err
 }
@@ -83,7 +86,7 @@ func (q *Queries) UserDelete(ctx context.Context, userID int64) (User, error) {
 
 const userGet = `-- name: UserGet :one
 SELECT
-  user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, brand_name, brand_model_name, model_year, car_created_at
+  user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, car_user_id, car_id, car_brand_model_id, car_brand_id, brand_name, brand_model_name, model_year
 FROM
   user_info u
 WHERE
@@ -102,17 +105,20 @@ func (q *Queries) UserGet(ctx context.Context, userID int64) (UserInfo, error) {
 		&i.PasswordChangedAt,
 		&i.CreatedAt,
 		&i.DeletedAt,
+		&i.CarUserID,
+		&i.CarID,
+		&i.CarBrandModelID,
+		&i.CarBrandID,
 		&i.BrandName,
 		&i.BrandModelName,
 		&i.ModelYear,
-		&i.CarCreatedAt,
 	)
 	return i, err
 }
 
 const userGetByUsername = `-- name: UserGetByUsername :one
 SELECT
-  user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, brand_name, brand_model_name, model_year, car_created_at
+  user_id, name, phone, email, password, password_changed_at, created_at, deleted_at, car_user_id, car_id, car_brand_model_id, car_brand_id, brand_name, brand_model_name, model_year
 FROM
   user_info u
 WHERE
@@ -132,10 +138,13 @@ func (q *Queries) UserGetByUsername(ctx context.Context, email string) (UserInfo
 		&i.PasswordChangedAt,
 		&i.CreatedAt,
 		&i.DeletedAt,
+		&i.CarUserID,
+		&i.CarID,
+		&i.CarBrandModelID,
+		&i.CarBrandID,
 		&i.BrandName,
 		&i.BrandModelName,
 		&i.ModelYear,
-		&i.CarCreatedAt,
 	)
 	return i, err
 }

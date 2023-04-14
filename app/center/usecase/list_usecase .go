@@ -7,12 +7,16 @@ import (
 )
 
 func (u *CenterUsecase) CentersList(ctx context.Context, req *obdv1.CentersListRequest) (*obdv1.CentersListResponse, error) {
-	centers, err := u.repo.CentersList(ctx, &req.AreaId)
+	request, err := u.factory.ListSqlFromGrpc(req)
+	if err != nil {
+		return nil, err
+	}
+	centers, err := u.repo.CentersList(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := u.factory.NewCentersListFromSqlResponse(centers)
+	resp, err := u.factory.ListGrpcFromSql(centers)
 	if err != nil {
 		return nil, err
 	}

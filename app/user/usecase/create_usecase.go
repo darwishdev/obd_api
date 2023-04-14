@@ -19,6 +19,6 @@ func (u *UserUsecase) UserCreate(ctx context.Context, req *obdv1.UserCreateReque
 	if err != nil {
 		return nil, err
 	}
-	res.LoginInfo = u.generateUserToken(res.User.Email, res.User.UserId)
+	res.LoginInfo = u.generateUserToken(res.User.Email, int64(res.User.UserId), int64(res.Car.CarId))
 	return res, nil
 }
