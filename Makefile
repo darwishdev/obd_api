@@ -46,4 +46,4 @@ migratedown:
 
 
 evans:
-	evans --host localhost --port 9090 -r repl
+	evans --host localhost --port ${GRPC_PORT} -r repl
