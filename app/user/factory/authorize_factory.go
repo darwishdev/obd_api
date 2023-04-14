@@ -10,7 +10,7 @@ import (
 func (f *UserFactory) AuthorizeGrpcFromSql(resp *db.UserInfo) (*obdv1User.UserAuthorizeResponse, error) {
 	serverResp := &obdv1User.UserAuthorizeResponse{
 		User: &obdv1User.User{
-			UserId:            resp.UserID,
+			UserId:            int32(resp.UserID),
 			Name:              resp.Name,
 			Phone:             resp.Phone,
 			Email:             resp.Email,
@@ -21,9 +21,12 @@ func (f *UserFactory) AuthorizeGrpcFromSql(resp *db.UserInfo) (*obdv1User.UserAu
 	}
 	if resp.BrandName.Valid {
 		carInfo := &obdv1Car.CarView{
-			BrandName:      resp.BrandName.String,
-			BrandModelName: resp.BrandModelName.String,
-			ModelYear:      resp.ModelYear.Int32,
+			CarId:           int32(resp.CarID.Int64),
+			CarBrandId:      int32(resp.CarBrandID.Int64),
+			CarBrandModelId: int32(resp.CarBrandModelID.Int64),
+			BrandName:       resp.BrandName.String,
+			BrandModelName:  resp.BrandModelName.String,
+			ModelYear:       resp.ModelYear.Int32,
 		}
 		serverResp.Car = carInfo
 	}

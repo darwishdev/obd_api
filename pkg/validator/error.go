@@ -47,6 +47,10 @@ func ErrorInvalid() error {
 	return fmt.Errorf("invalid")
 }
 
+func ErrorInvalidLocation() error {
+	return fmt.Errorf("invalid_lat_or_long")
+}
+
 func AlreadyExistsErr(err error) error {
 	return connect.NewError(connect.CodeAlreadyExists, err)
 }

@@ -8,8 +8,8 @@ import (
 type Address struct {
 	StreetAddress string
 	City          string
-	Lat           float64
-	Long          float64
+	Lat           float32
+	Long          float32
 }
 
 var (
@@ -33,20 +33,20 @@ func GenerateRandomAddress() Address {
 	var (
 		streetAddress string
 		city          string
-		latitude      float64
-		longitude     float64
+		latitude      float32
+		longitude     float32
 	)
 
 	if rand.Intn(2) == 0 {
 		streetAddress = fmt.Sprintf("%d %s street", rand.Intn(100), "sheikh zayed")
 		city = "Giza"
-		latitude = randFloatInRange(sheikhZayedRange[0][0], sheikhZayedRange[1][0])
-		longitude = randFloatInRange(sheikhZayedRange[0][1], sheikhZayedRange[1][1])
+		latitude = randFloatInRange(float32(sheikhZayedRange[0][0]), float32(sheikhZayedRange[1][0]))
+		longitude = randFloatInRange(float32(sheikhZayedRange[0][1]), float32(sheikhZayedRange[1][1]))
 	} else {
 		streetAddress = fmt.Sprintf("%d %s street", rand.Intn(100), "mohandseen")
 		city = "Giza"
-		latitude = randFloatInRange(mohandseenRange[0][0], mohandseenRange[1][0])
-		longitude = randFloatInRange(mohandseenRange[0][1], mohandseenRange[1][1])
+		latitude = randFloatInRange(float32(mohandseenRange[0][0]), float32(mohandseenRange[1][0]))
+		longitude = randFloatInRange(float32(mohandseenRange[0][1]), float32(mohandseenRange[1][1]))
 	}
 
 	return Address{
@@ -57,8 +57,8 @@ func GenerateRandomAddress() Address {
 	}
 }
 
-func randFloatInRange(min, max float64) float64 {
-	return min + rand.Float64()*(max-min)
+func randFloatInRange(min, max float32) float32 {
+	return min + rand.Float32()*(max-min)
 }
 
 // func RandomAddress() string {

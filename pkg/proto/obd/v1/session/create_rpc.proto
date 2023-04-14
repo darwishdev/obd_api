@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/session/entity.proto";
+
+message SessionCreateRequest {
+    bool is_live =1; //indicates if session loads live data from car to attach results to session_valyes if its not soit will insert into session codes 
+}
+
+
+message SessionCreateResponse {
+    Session Session = 1;
+}
+
+
+
+
+// attach codes
+message SessionAttachCodeRequest {
+    int64 session_id = 1;
+    int64 code_id =2; 
+}
+
+
+message SessionAttachCodeResponse {
+    SessionCode Session = 1;
+}
+
+
+
+
+// attach values
+message SessionAttachValueRequest {
+    int64 session_id = 1;
+    string value_key =2; 
+    string value_data =3; 
+}
+
+
+message SessionAttachValueResponse {
+    SessionValue Session = 1;
+}
+
+
+

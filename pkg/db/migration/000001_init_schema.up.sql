@@ -42,8 +42,8 @@ CREATE TABLE "centers" (
     "location" character varying(200) NOT NULL,
     "address" character varying(200) NOT NULL,
     "area_id" bigint NOT NULL,
-    "lat" character varying(200) NOT NULL,
-    "long" character varying(200) NOT NULL,
+    "lat" REAL NOT NULL,
+    "long" REAL NOT NULL,
     "created_at" timestamptz NOT NULL DEFAULT NOW(),
     "deleted_at" timestamptz
 );
@@ -60,24 +60,35 @@ CREATE TABLE "reviews" (
 CREATE TABLE "sessions" (
     "session_id" bigserial PRIMARY KEY,
     "car_id" bigint NOT NULL,
+    "is_live" BOOLEAN   NOT NULL,
     "created_at" timestamptz NOT NULL DEFAULT NOW(),
     "finished_at" timestamptz
 );
-
-CREATE TABLE "session_results" (
-    "session_result_id" bigserial PRIMARY KEY,
-    "session_id" bigint NOT NULL,
-    "code_name" character varying(200) NOT NULL
-);
-
+COMMENT ON COLUMN sessions.is_live IS 'indicates if session loads live data from car to attach results to session_valyes if its not soit will insert into session codes ';
+-- //code_type will be (M "mechanical" , "T"  tires , "B" body and paint)
 CREATE TABLE "codes" (
     "code_id" bigserial PRIMARY KEY,
-    "session_id" bigint NOT NULL,
     "car_brand_model_id" bigint NOT NULL,
     "code_name" character varying(200) NOT NULL,
+    "vehicle_part" character varying(200) NOT NULL,
+    "code_type" character varying(1) NOT NULL,
     "description" character varying(200) NOT NULL,
-    "isEmergency" BOOLEAN
+    "is_emergency" BOOLEAN
 );
+COMMENT ON COLUMN codes.code_type IS 'code_type will be (M "mechanical" , "T"  tires , "B" body and paint) ';
+
+CREATE TABLE "session_values" (
+    "session_value_id" bigserial PRIMARY KEY,
+    "session_id" bigint NOT NULL,
+    "value_key" character varying(50) NOT NULL,
+    "value_data" character varying(50) NOT NULL
+);
+CREATE TABLE "session_codes" (
+    "session_code_id" bigserial PRIMARY KEY,
+    "session_id" bigint NOT NULL,
+    "code_id"  bigint NOT NULL
+);
+
 
 CREATE TABLE "winch" (
     "winch_id" bigserial PRIMARY KEY,
@@ -125,3 +136,38 @@ ALTER TABLE
     "winch"
 ADD
     FOREIGN KEY ("area_id") REFERENCES "areas" ("area_id");
+
+
+
+
+ALTER TABLE
+    "sessions"
+ADD
+    FOREIGN KEY ("car_id") REFERENCES "cars" ("car_id");
+
+ALTER TABLE
+    "session_values"
+ADD
+    FOREIGN KEY ("session_id") REFERENCES "sessions" ("session_id");
+
+
+
+ALTER TABLE
+    "session_codes"
+ADD
+    FOREIGN KEY ("session_id") REFERENCES "sessions" ("session_id");
+
+
+
+ALTER TABLE
+    "codes"
+ADD
+    FOREIGN KEY ("car_brand_model_id") REFERENCES "car_brand_models" ("car_brand_model_id");
+
+
+
+
+ALTER TABLE
+    "session_codes"
+ADD
+    FOREIGN KEY ("code_id") REFERENCES "codes" ("code_id");

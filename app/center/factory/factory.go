@@ -6,7 +6,8 @@ import (
 )
 
 type CenterFactoryInterface interface {
-	NewCentersListFromSqlResponse(req *[]db.Center) (*obdv1.CentersListResponse, error)
+	ListSqlFromGrpc(req *obdv1.CentersListRequest) (*db.CentersListParams, error)
+	ListGrpcFromSql(req *[]db.CenterInfo) (*obdv1.CentersListResponse, error)
 }
 
 type CenterFactory struct {

@@ -36,11 +36,13 @@ type CarBrandModel struct {
 }
 
 type CarInfo struct {
-	UserID         int64     `json:"user_id"`
-	BrandName      string    `json:"brand_name"`
-	BrandModelName string    `json:"brand_model_name"`
-	ModelYear      int32     `json:"model_year"`
-	CreatedAt      time.Time `json:"created_at"`
+	CarUserID       int64  `json:"car_user_id"`
+	CarID           int64  `json:"car_id"`
+	CarBrandModelID int64  `json:"car_brand_model_id"`
+	CarBrandID      int64  `json:"car_brand_id"`
+	BrandName       string `json:"brand_name"`
+	BrandModelName  string `json:"brand_model_name"`
+	ModelYear       int32  `json:"model_year"`
 }
 
 type Center struct {
@@ -50,19 +52,36 @@ type Center struct {
 	Location  string       `json:"location"`
 	Address   string       `json:"address"`
 	AreaID    int64        `json:"area_id"`
-	Lat       string       `json:"lat"`
-	Long      string       `json:"long"`
+	Lat       float32      `json:"lat"`
+	Long      float32      `json:"long"`
 	CreatedAt time.Time    `json:"created_at"`
 	DeletedAt sql.NullTime `json:"deleted_at"`
 }
 
+type CenterInfo struct {
+	CenterID     int64     `json:"center_id"`
+	Name         string    `json:"name"`
+	Phone        string    `json:"phone"`
+	Location     string    `json:"location"`
+	Address      string    `json:"address"`
+	AreaID       int64     `json:"area_id"`
+	Lat          float32   `json:"lat"`
+	Long         float32   `json:"long"`
+	CreatedAt    time.Time `json:"created_at"`
+	AvgRate      float64   `json:"avg_rate"`
+	ReviewsCount int64     `json:"reviews_count"`
+	Distance     float32   `json:"distance"`
+}
+
 type Code struct {
-	CodeID          int64        `json:"code_id"`
-	SessionID       int64        `json:"session_id"`
-	CarBrandModelID int64        `json:"car_brand_model_id"`
-	CodeName        string       `json:"code_name"`
-	Description     string       `json:"description"`
-	IsEmergency     sql.NullBool `json:"isEmergency"`
+	CodeID          int64  `json:"code_id"`
+	CarBrandModelID int64  `json:"car_brand_model_id"`
+	CodeName        string `json:"code_name"`
+	VehiclePart     string `json:"vehicle_part"`
+	// code_type will be (M "mechanical" , "T"  tires , "B" body and paint)
+	CodeType    string       `json:"code_type"`
+	Description string       `json:"description"`
+	IsEmergency sql.NullBool `json:"is_emergency"`
 }
 
 type Review struct {
@@ -75,16 +94,25 @@ type Review struct {
 }
 
 type Session struct {
-	SessionID  int64        `json:"session_id"`
-	CarID      int64        `json:"car_id"`
+	SessionID int64 `json:"session_id"`
+	CarID     int64 `json:"car_id"`
+	// indicates if session loads live data from car to attach results to session_valyes if its not soit will insert into session codes
+	IsLive     bool         `json:"is_live"`
 	CreatedAt  time.Time    `json:"created_at"`
 	FinishedAt sql.NullTime `json:"finished_at"`
 }
 
-type SessionResult struct {
-	SessionResultID int64  `json:"session_result_id"`
-	SessionID       int64  `json:"session_id"`
-	CodeName        string `json:"code_name"`
+type SessionCode struct {
+	SessionCodeID int64 `json:"session_code_id"`
+	SessionID     int64 `json:"session_id"`
+	CodeID        int64 `json:"code_id"`
+}
+
+type SessionValue struct {
+	SessionValueID int64  `json:"session_value_id"`
+	SessionID      int64  `json:"session_id"`
+	ValueKey       string `json:"value_key"`
+	ValueData      string `json:"value_data"`
 }
 
 type User struct {
@@ -107,10 +135,13 @@ type UserInfo struct {
 	PasswordChangedAt time.Time      `json:"password_changed_at"`
 	CreatedAt         time.Time      `json:"created_at"`
 	DeletedAt         sql.NullTime   `json:"deleted_at"`
+	CarUserID         sql.NullInt64  `json:"car_user_id"`
+	CarID             sql.NullInt64  `json:"car_id"`
+	CarBrandModelID   sql.NullInt64  `json:"car_brand_model_id"`
+	CarBrandID        sql.NullInt64  `json:"car_brand_id"`
 	BrandName         sql.NullString `json:"brand_name"`
 	BrandModelName    sql.NullString `json:"brand_model_name"`
 	ModelYear         sql.NullInt32  `json:"model_year"`
-	CarCreatedAt      sql.NullTime   `json:"car_created_at"`
 }
 
 type Winch struct {

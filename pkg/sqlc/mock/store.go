@@ -140,10 +140,10 @@ func (mr *MockStoreMockRecorder) CenterCreate(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // CentersList mocks base method.
-func (m *MockStore) CentersList(arg0 context.Context, arg1 int64) ([]db.Center, error) {
+func (m *MockStore) CentersList(arg0 context.Context, arg1 db.CentersListParams) ([]db.CentersListRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CentersList", arg0, arg1)
-	ret0, _ := ret[0].([]db.Center)
+	ret0, _ := ret[0].([]db.CentersListRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -182,6 +182,81 @@ func (m *MockStore) ReviewsList(arg0 context.Context, arg1 db.ReviewsListParams)
 func (mr *MockStoreMockRecorder) ReviewsList(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReviewsList", reflect.TypeOf((*MockStore)(nil).ReviewsList), arg0, arg1)
+}
+
+// SessionAttachCode mocks base method.
+func (m *MockStore) SessionAttachCode(arg0 context.Context, arg1 db.SessionAttachCodeParams) (db.SessionCode, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SessionAttachCode", arg0, arg1)
+	ret0, _ := ret[0].(db.SessionCode)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SessionAttachCode indicates an expected call of SessionAttachCode.
+func (mr *MockStoreMockRecorder) SessionAttachCode(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SessionAttachCode", reflect.TypeOf((*MockStore)(nil).SessionAttachCode), arg0, arg1)
+}
+
+// SessionAttachValue mocks base method.
+func (m *MockStore) SessionAttachValue(arg0 context.Context, arg1 db.SessionAttachValueParams) (db.SessionValue, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SessionAttachValue", arg0, arg1)
+	ret0, _ := ret[0].(db.SessionValue)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SessionAttachValue indicates an expected call of SessionAttachValue.
+func (mr *MockStoreMockRecorder) SessionAttachValue(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SessionAttachValue", reflect.TypeOf((*MockStore)(nil).SessionAttachValue), arg0, arg1)
+}
+
+// SessionClose mocks base method.
+func (m *MockStore) SessionClose(arg0 context.Context, arg1 int64) (db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SessionClose", arg0, arg1)
+	ret0, _ := ret[0].(db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SessionClose indicates an expected call of SessionClose.
+func (mr *MockStoreMockRecorder) SessionClose(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SessionClose", reflect.TypeOf((*MockStore)(nil).SessionClose), arg0, arg1)
+}
+
+// SessionCreate mocks base method.
+func (m *MockStore) SessionCreate(arg0 context.Context, arg1 db.SessionCreateParams) (db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SessionCreate", arg0, arg1)
+	ret0, _ := ret[0].(db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SessionCreate indicates an expected call of SessionCreate.
+func (mr *MockStoreMockRecorder) SessionCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SessionCreate", reflect.TypeOf((*MockStore)(nil).SessionCreate), arg0, arg1)
+}
+
+// SessionsList mocks base method.
+func (m *MockStore) SessionsList(arg0 context.Context, arg1 int64) ([]db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SessionsList", arg0, arg1)
+	ret0, _ := ret[0].([]db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SessionsList indicates an expected call of SessionsList.
+func (mr *MockStoreMockRecorder) SessionsList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SessionsList", reflect.TypeOf((*MockStore)(nil).SessionsList), arg0, arg1)
 }
 
 // UserCreate mocks base method.

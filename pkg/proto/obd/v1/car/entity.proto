@@ -4,9 +4,9 @@ package obd.v1;
 
 import "google/protobuf/timestamp.proto";
 message Car {
-    int64 car_id = 1;
-    int64 car_brand_model_id = 2;
-    int64 user_id = 3;
+    int32 car_id = 1;
+    int32 car_brand_model_id = 2;
+    int32 user_id = 3;
     int32 model_year = 4;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp deleted_at = 6;
@@ -14,7 +14,7 @@ message Car {
 
 
 message CarBrandModel {
-    int64 car_brand_model_id = 1;
+    int32 car_brand_model_id = 1;
     string name = 2;
     string years= 3;
 }
@@ -23,9 +23,12 @@ message CarBrandModel {
 
 
 message CarView {
-    string brand_name = 1;
-    string brand_model_name = 2;
-    int32 model_year = 3;
+    int32 car_id = 1;
+    int32 car_brand_id = 2;
+    int32 car_brand_model_id = 3;
+    string brand_name = 4;
+    string brand_model_name = 5;
+    int32 model_year = 6;
 }
 
 

@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"math"
 	"net/mail"
 	"regexp"
 	"time"
@@ -76,4 +77,17 @@ func ValidateDate(date time.Time, minYear int, maxYear int) bool {
 	minDate := time.Date(minYear, time.January, 1, 0, 0, 0, 0, time.UTC)
 	maxDate := time.Date(maxYear, time.December, 31, 23, 59, 59, 0, time.UTC)
 	return !date.Before(minDate) && !date.After(maxDate)
+}
+
+func ValidateLatLng(lat, lng float32) error {
+	if lat < -90 || lat > 90 {
+		return ErrorInvalidLocation()
+	}
+	if lng < -180 || lng > 180 {
+		return ErrorInvalidLocation()
+	}
+	if math.IsNaN(float64(lat)) || math.IsNaN(float64(lng)) {
+		return ErrorInvalidLocation()
+	}
+	return nil
 }
