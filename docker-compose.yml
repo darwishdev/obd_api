@@ -6,10 +6,13 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: obd_api
+    image: obd_api
+    env_file:
+      - app.env
     ports:
       - "9091:9091"
     environment:
-      - DB_SOURCE=postgresql://dev:secret@postgres:5432/mln_obd?sslmode=disable
+      - DB_SOURCE=${DB_SOURCE}
     entrypoint:
       [
         "/app/wait-for.sh",
@@ -18,17 +21,12 @@ services:
         "/app/start.sh"
       ]
     command: [ "/app/main" ]
-    
-
-  # nginx:
-  #   build: ./nginx
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - ./nginx/certificates:/etc/nginx/certificates
-  #   depends_on:
-  #     - app
 volumes:
   app:
     driver: local
+
+
+networks:
+  default:
+    external:
+      name: postgres_network
