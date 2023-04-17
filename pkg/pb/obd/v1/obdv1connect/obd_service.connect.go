@@ -49,6 +49,7 @@ type ObdClient interface {
 	SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error)
 	SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error)
 	SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error)
+	SessionClose(context.Context, *connect_go.Request[session.SessionCloseRequest]) (*connect_go.Response[session.SessionCloseResponse], error)
 }
 
 // NewObdClient constructs a client for the obd.v1.Obd service. By default, it uses the Connect
@@ -136,6 +137,11 @@ func NewObdClient(httpClient connect_go.HTTPClient, baseURL string, opts ...conn
 			baseURL+"/obd.v1.Obd/SessionsList",
 			opts...,
 		),
+		sessionClose: connect_go.NewClient[session.SessionCloseRequest, session.SessionCloseResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/SessionClose",
+			opts...,
+		),
 	}
 }
 
@@ -156,6 +162,7 @@ type obdClient struct {
 	sessionAttachCode  *connect_go.Client[session.SessionAttachCodeRequest, session.SessionAttachCodeResponse]
 	sessionAttachValue *connect_go.Client[session.SessionAttachValueRequest, session.SessionAttachValueResponse]
 	sessionsList       *connect_go.Client[session.SessionsListRequest, session.SessionsListResponse]
+	sessionClose       *connect_go.Client[session.SessionCloseRequest, session.SessionCloseResponse]
 }
 
 // UserCreate calls obd.v1.Obd.UserCreate.
@@ -233,6 +240,11 @@ func (c *obdClient) SessionsList(ctx context.Context, req *connect_go.Request[se
 	return c.sessionsList.CallUnary(ctx, req)
 }
 
+// SessionClose calls obd.v1.Obd.SessionClose.
+func (c *obdClient) SessionClose(ctx context.Context, req *connect_go.Request[session.SessionCloseRequest]) (*connect_go.Response[session.SessionCloseResponse], error) {
+	return c.sessionClose.CallUnary(ctx, req)
+}
+
 // ObdHandler is an implementation of the obd.v1.Obd service.
 type ObdHandler interface {
 	UserCreate(context.Context, *connect_go.Request[user.UserCreateRequest]) (*connect_go.Response[user.UserCreateResponse], error)
@@ -250,6 +262,7 @@ type ObdHandler interface {
 	SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error)
 	SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error)
 	SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error)
+	SessionClose(context.Context, *connect_go.Request[session.SessionCloseRequest]) (*connect_go.Response[session.SessionCloseResponse], error)
 }
 
 // NewObdHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -334,6 +347,11 @@ func NewObdHandler(svc ObdHandler, opts ...connect_go.HandlerOption) (string, ht
 		svc.SessionsList,
 		opts...,
 	))
+	mux.Handle("/obd.v1.Obd/SessionClose", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionClose",
+		svc.SessionClose,
+		opts...,
+	))
 	return "/obd.v1.Obd/", mux
 }
 
@@ -398,4 +416,8 @@ func (UnimplementedObdHandler) SessionAttachValue(context.Context, *connect_go.R
 
 func (UnimplementedObdHandler) SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionsList is not implemented"))
+}
+
+func (UnimplementedObdHandler) SessionClose(context.Context, *connect_go.Request[session.SessionCloseRequest]) (*connect_go.Response[session.SessionCloseResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionClose is not implemented"))
 }

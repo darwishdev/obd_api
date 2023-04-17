@@ -10,6 +10,8 @@ type SessionRepoInterface interface {
 	SessionCreate(ctx context.Context, req *db.SessionCreateParams) (*db.Session, error)
 	SessionAttachCode(ctx context.Context, req *db.SessionAttachCodeParams) (*db.SessionCode, error)
 	SessionAttachValue(ctx context.Context, req *db.SessionAttachValueParams) (*db.SessionValue, error)
+	SessionsList(ctx context.Context, req *int64) (*[]db.Session, error)
+	SessionClose(ctx context.Context, req *int64) (*db.Session, error)
 }
 
 type SessionRepo struct {

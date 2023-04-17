@@ -14,6 +14,7 @@ type SessionUsecaseInterface interface {
 	SessionCreate(ctx context.Context, req *obdv1.SessionCreateRequest, userId int64) (*obdv1.SessionCreateResponse, error)
 	SessionAttachValue(ctx context.Context, req *obdv1.SessionAttachValueRequest) (*obdv1.SessionAttachValueResponse, error)
 	SessionAttachCode(ctx context.Context, req *obdv1.SessionAttachCodeRequest) (*obdv1.SessionAttachCodeResponse, error)
+	SessionsList(ctx context.Context, req *obdv1.SessionsListRequest) (*obdv1.SessionsListResponse, error)
 }
 
 type SessionUsecase struct {

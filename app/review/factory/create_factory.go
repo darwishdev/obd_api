@@ -36,9 +36,9 @@ func (f *ReviewFactory) CreateSqlFromGrpc(req *obdv1.ReviewCreateRequest) (*db.R
 func (f *ReviewFactory) CreateGrpcFromSql(req *db.Review) (*obdv1.ReviewCreateResponse, error) {
 	response := &obdv1.ReviewCreateResponse{
 		Review: &obdv1.Review{
-			ReviewId:  req.ReviewID,
-			UserId:    req.UserID,
-			CenterId:  req.CenterID,
+			ReviewId:  int32(req.ReviewID),
+			UserId:    int32(req.UserID),
+			CenterId:  int32(req.CenterID),
 			Review:    req.Review,
 			Rate:      int32(req.Rate),
 			CreatedAt: timestamppb.New(req.CreatedAt),

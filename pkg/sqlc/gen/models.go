@@ -59,18 +59,18 @@ type Center struct {
 }
 
 type CenterInfo struct {
-	CenterID     int64     `json:"center_id"`
-	Name         string    `json:"name"`
-	Phone        string    `json:"phone"`
-	Location     string    `json:"location"`
-	Address      string    `json:"address"`
-	AreaID       int64     `json:"area_id"`
-	Lat          float32   `json:"lat"`
-	Long         float32   `json:"long"`
-	CreatedAt    time.Time `json:"created_at"`
-	AvgRate      float64   `json:"avg_rate"`
-	ReviewsCount int64     `json:"reviews_count"`
-	Distance     float32   `json:"distance"`
+	CenterID     int64       `json:"center_id"`
+	Name         string      `json:"name"`
+	Phone        string      `json:"phone"`
+	Location     string      `json:"location"`
+	Address      string      `json:"address"`
+	AreaID       int64       `json:"area_id"`
+	Lat          float32     `json:"lat"`
+	Long         float32     `json:"long"`
+	CreatedAt    time.Time   `json:"created_at"`
+	AvgRate      interface{} `json:"avg_rate"`
+	ReviewsCount int64       `json:"reviews_count"`
+	Distance     float32     `json:"distance"`
 }
 
 type Code struct {

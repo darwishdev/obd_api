@@ -15,9 +15,8 @@ import "obd/v1/car/update_rpc.proto";
 import "obd/v1/car/brands_list_rpc.proto";
 import "obd/v1/session/create_rpc.proto";
 import "obd/v1/session/list_rpc.proto";
+import "obd/v1/session/close_rpc.proto";
 import "google/protobuf/empty.proto";
-
-// option go_package = "github.com/darwishdev/mln_retail/internal/pb";
 
 service Obd {
     rpc UserCreate (UserCreateRequest) returns (UserCreateResponse) {  }
@@ -35,6 +34,5 @@ service Obd {
     rpc SessionAttachCode (SessionAttachCodeRequest) returns (SessionAttachCodeResponse) {  }
     rpc SessionAttachValue (SessionAttachValueRequest) returns (SessionAttachValueResponse) {  }
     rpc SessionsList (SessionsListRequest) returns (SessionsListResponse) {  }
-
-
+    rpc SessionClose (SessionCloseRequest) returns (SessionCloseResponse) {  }
 }

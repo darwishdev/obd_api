@@ -6,13 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: obd_api
+    volumes:
+      - ./app.env:/app/app.env
     image: obd_api
-    env_file:
-      - app.env
     ports:
-      - "9091:9091"
-    environment:
-      - DB_SOURCE=${DB_SOURCE}
+      - 9091:9091
     entrypoint:
       [
         "/app/wait-for.sh",
@@ -21,9 +19,6 @@ services:
         "/app/start.sh"
       ]
     command: [ "/app/main" ]
-volumes:
-  app:
-    driver: local
 
 
 networks:

@@ -31,8 +31,8 @@ func (f *CarFactory) UpdateSqlFromGrpc(req *obdv1.CarUpdateRequest) (*db.CarUpda
 	}
 	resp := &db.CarUpdateParams{
 		CarID:           req.CarId,
-		CarBrandModelID: sql.NullInt64{Int64: req.CarBrandModelId},
-		ModelYear:       sql.NullInt32{Int32: req.ModelYear},
+		CarBrandModelID: sql.NullInt64{Int64: req.CarBrandModelId, Valid: req.CarBrandModelId != 0},
+		ModelYear:       sql.NullInt32{Int32: req.ModelYear, Valid: req.CarBrandModelId != 0},
 	}
 
 	log.Debug().Interface("resp", resp)

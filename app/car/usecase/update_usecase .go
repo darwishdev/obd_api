@@ -6,11 +6,12 @@ import (
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/car"
 )
 
-func (u *CarUsecase) CarUpdate(ctx context.Context, req *obdv1.CarUpdateRequest, userId int64) (*obdv1.CarUpdateResponse, error) {
+func (u *CarUsecase) CarUpdate(ctx context.Context, req *obdv1.CarUpdateRequest, carId int64) (*obdv1.CarUpdateResponse, error) {
 	request, err := u.factory.UpdateSqlFromGrpc(req)
 	if err != nil {
 		return nil, err
 	}
+	request.CarID = carId
 
 	cars, err := u.repo.CarUpdate(ctx, request)
 	if err != nil {

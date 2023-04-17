@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package obd.v1;
+import "obd/v1/session/entity.proto";
+
+
+
+message SessionCloseRequest {
+    int64 session_id = 1;
+
+}
+    
+message SessionCloseResponse {
+    Session session = 1;
+}

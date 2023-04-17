@@ -54,5 +54,4 @@ GROUP BY
   c.area_id,
   c.lat,
   c.long,
-  distance,
   c.created_at;

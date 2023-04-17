@@ -7,6 +7,7 @@ import (
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/review"
 	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
 	"github.com/darwishdev/obd_api/pkg/validator"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -31,10 +32,12 @@ func (f *ReviewFactory) ListSqlFromGrpc(req *obdv1.ReviewsListRequest) (*db.Revi
 	if err := reviewsListRequestValidation(req); err != nil {
 		return nil, err
 	}
-	resp := &db.ReviewsListParams{
-		CenterID: sql.NullInt64{Int64: req.CenterId, Valid: true},
-	}
-	return resp, nil
+	var resp db.ReviewsListParams
+
+	resp.CenterID = sql.NullInt64{Int64: req.CenterId, Valid: req.CenterId != 0}
+
+	log.Debug().Interface("resp", resp).Msg("Dekete")
+	return &resp, nil
 }
 
 func (f *ReviewFactory) ListGrpcFromSqlArr(req *[]db.ReviewsListRow) (*obdv1.ReviewsListResponse, error) {

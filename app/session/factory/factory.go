@@ -11,6 +11,8 @@ type SessionFactoryInterface interface {
 	AttachCodeGrpcFromSql(resp *db.SessionCode) (*obdv1.SessionAttachCodeResponse, error)
 	AttachValueSqlFromGrpc(req *obdv1.SessionAttachValueRequest) (*db.SessionAttachValueParams, error)
 	AttachValueGrpcFromSql(resp *db.SessionValue) (*obdv1.SessionAttachValueResponse, error)
+	ListGrpcFromSqlArr(req *[]db.Session) (*obdv1.SessionsListResponse, error)
+	CloseGrpcFromSql(req *db.Session) (*obdv1.SessionCloseResponse, error)
 }
 
 type SessionFactory struct {

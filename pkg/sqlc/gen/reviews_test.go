@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/darwishdev/obd_api/pkg/util"
+	"github.com/rs/zerolog/log"
 )
 
 type reviewCreateTest struct {
@@ -72,6 +73,44 @@ func TestReviewsCreate(t *testing.T) {
 				createdReview.CenterID != tc.expectedRes.CenterID {
 				t.Errorf("unexpected result: got %v, expected %v", createdReview, tc.expectedRes)
 			}
+		})
+	}
+}
+
+type reviewsListTest struct {
+	name        string
+	input       ReviewsListParams
+	expectErr   bool
+	expectedRes []Review
+}
+
+func TestReviewsList(t *testing.T) {
+
+	testcases := []reviewsListTest{
+		{
+			name:        "ValidInput",
+			input:       ReviewsListParams{},
+			expectErr:   false,
+			expectedRes: []Review{{}},
+		},
+		// {
+		// 	name:        "InvalidCenterID",
+		// 	input:       ReviewsListParams{UserID: sql.NullInt64{Int64: 1}},
+		// 	expectErr:   true,
+		// 	expectedRes: []Review{{}},
+		// },
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			resp, err := testQueries.ReviewsList(context.Background(), tc.input)
+			if tc.expectErr && err == nil {
+				t.Errorf("expected an error but got none")
+			}
+			if !tc.expectErr && err != nil {
+				t.Errorf("expected no error but got %v", err)
+			}
+			log.Debug().Interface("resp", resp).Msg("Delete me")
 		})
 	}
 }

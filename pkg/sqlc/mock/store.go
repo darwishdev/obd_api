@@ -140,10 +140,10 @@ func (mr *MockStoreMockRecorder) CenterCreate(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // CentersList mocks base method.
-func (m *MockStore) CentersList(arg0 context.Context, arg1 db.CentersListParams) ([]db.CentersListRow, error) {
+func (m *MockStore) CentersList(arg0 context.Context, arg1 db.CentersListParams) ([]db.CenterInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CentersList", arg0, arg1)
-	ret0, _ := ret[0].([]db.CentersListRow)
+	ret0, _ := ret[0].([]db.CenterInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
