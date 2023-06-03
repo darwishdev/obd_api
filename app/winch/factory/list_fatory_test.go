@@ -15,7 +15,6 @@ func TestListGrpcFromSql(t *testing.T) {
 		WinchID:     1,
 		Name:        "Test Winch",
 		Phone:       "123456789",
-		DriverName:  "Test Location",
 		DriverPhone: "Test Address",
 		CreatedAt:   time.Date(2022, 4, 1, 0, 0, 0, 0, time.UTC),
 	}
@@ -24,7 +23,6 @@ func TestListGrpcFromSql(t *testing.T) {
 		WinchId:     1,
 		Name:        "Test Winch",
 		Phone:       "123456789",
-		DriverName:  "Test Location",
 		DriverPhone: "Test Address",
 		CreatedAt:   timestamppb.New(c.CreatedAt),
 	}

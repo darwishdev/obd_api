@@ -6,9 +6,10 @@ import "obd/v1/winch/entity.proto";
 
 
 message WinchListRequest {
-    int64 area_id = 1;
+    float lat = 1;
+    float long = 2;
 }
     
 message WinchListResponse {
-    repeated Winch winches = 1;
+    repeated WinchListRow winches = 1;
 }

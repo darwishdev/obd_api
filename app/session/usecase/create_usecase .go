@@ -24,36 +24,36 @@ func (u *SessionUsecase) SessionCreate(ctx context.Context, req *obdv1.SessionCr
 	return resp, nil
 }
 
-func (u *SessionUsecase) SessionAttachCode(ctx context.Context, req *obdv1.SessionAttachCodeRequest) (*obdv1.SessionAttachCodeResponse, error) {
-	request, err := u.factory.AttachCodeSqlFromGrpc(req)
+func (u *SessionUsecase) SessionAttachCodes(ctx context.Context, req *obdv1.SessionAttachCodesRequest) (*obdv1.SessionAttachCodesResponse, error) {
+	request, err := u.factory.AttachCodesSqlFromGrpc(req)
 	if err != nil {
 		return nil, err
 	}
-	sessions, err := u.repo.SessionAttachCode(ctx, request)
+	_, err = u.repo.SessionAttachCodes(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := u.factory.AttachCodeGrpcFromSql(sessions)
-	if err != nil {
-		return nil, err
+	resp := &obdv1.SessionAttachCodesResponse{
+		Created: true,
 	}
+
 	return resp, nil
 }
 
-func (u *SessionUsecase) SessionAttachValue(ctx context.Context, req *obdv1.SessionAttachValueRequest) (*obdv1.SessionAttachValueResponse, error) {
-	request, err := u.factory.AttachValueSqlFromGrpc(req)
+func (u *SessionUsecase) SessionAttachValues(ctx context.Context, req *obdv1.SessionAttachValuesRequest) (*obdv1.SessionAttachValuesResponse, error) {
+	request, err := u.factory.AttachValuesSqlFromGrpc(req)
 	if err != nil {
 		return nil, err
 	}
-	sessions, err := u.repo.SessionAttachValue(ctx, request)
+	_, err = u.repo.SessionAttachValues(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := u.factory.AttachValueGrpcFromSql(sessions)
-	if err != nil {
-		return nil, err
+	resp := &obdv1.SessionAttachValuesResponse{
+		Created: true,
 	}
+
 	return resp, nil
 }

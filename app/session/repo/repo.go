@@ -8,9 +8,10 @@ import (
 
 type SessionRepoInterface interface {
 	SessionCreate(ctx context.Context, req *db.SessionCreateParams) (*db.Session, error)
-	SessionAttachCode(ctx context.Context, req *db.SessionAttachCodeParams) (*db.SessionCode, error)
-	SessionAttachValue(ctx context.Context, req *db.SessionAttachValueParams) (*db.SessionValue, error)
-	SessionsList(ctx context.Context, req *int64) (*[]db.Session, error)
+	SessionAttachCodes(ctx context.Context, req *db.SessionAttachCodesParams) (*[]db.SessionCode, error)
+	SessionAttachValues(ctx context.Context, req *db.SessionAttachValuesParams) (*[]db.SessionValue, error)
+	SessionsList(ctx context.Context, req *int64) (*[]db.SessionsListRow, error)
+	SessionGetCodes(ctx context.Context, req *int64) (*[]db.Code, error)
 	SessionClose(ctx context.Context, req *int64) (*db.Session, error)
 }
 

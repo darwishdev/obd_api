@@ -8,7 +8,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (repo *WinchRepo) WinchList(ctx context.Context, req *int64) (*[]db.WinchListRow, error) {
+func (repo *WinchRepo) WinchList(ctx context.Context, req *db.WinchListParams) (*[]db.WinchInfo, error) {
 	winches, err := repo.store.WinchList(context.Background(), *req)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok {

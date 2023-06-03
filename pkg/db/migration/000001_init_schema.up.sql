@@ -39,7 +39,7 @@ CREATE TABLE "centers" (
     "center_id" bigserial PRIMARY KEY,
     "name" character varying(200) NOT NULL,
     "phone" character varying(200) NOT NULL,
-    "location" character varying(200) NOT NULL,
+    "image" character varying(200) NOT NULL DEFAULT 'static-center-logo.png',
     "address" character varying(200) NOT NULL,
     "area_id" bigint NOT NULL,
     "lat" REAL NOT NULL,
@@ -97,6 +97,8 @@ CREATE TABLE "winch" (
     "phone" character varying(200) NOT NULL,
     "driver_name" character varying(200) NOT NULL,
     "driver_phone" character varying(200) NOT NULL,
+    "lat" Real NOT NULL,
+    "long" Real NOT NULL,
     "created_at" timestamptz NOT NULL DEFAULT NOW(),
     "deleted_at" timestamptz
 );

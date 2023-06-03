@@ -14,7 +14,6 @@ func (f *UserFactory) AuthorizeGrpcFromSql(resp *db.UserInfo) (*obdv1User.UserAu
 			Name:              resp.Name,
 			Phone:             resp.Phone,
 			Email:             resp.Email,
-			Password:          resp.Password,
 			PasswordChangedAt: timestamppb.New(resp.PasswordChangedAt),
 			CreatedAt:         timestamppb.New(resp.CreatedAt),
 		},

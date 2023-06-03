@@ -49,7 +49,7 @@ type Center struct {
 	CenterID  int64        `json:"center_id"`
 	Name      string       `json:"name"`
 	Phone     string       `json:"phone"`
-	Location  string       `json:"location"`
+	Image     string       `json:"image"`
 	Address   string       `json:"address"`
 	AreaID    int64        `json:"area_id"`
 	Lat       float32      `json:"lat"`
@@ -59,18 +59,18 @@ type Center struct {
 }
 
 type CenterInfo struct {
-	CenterID     int64       `json:"center_id"`
-	Name         string      `json:"name"`
-	Phone        string      `json:"phone"`
-	Location     string      `json:"location"`
-	Address      string      `json:"address"`
-	AreaID       int64       `json:"area_id"`
-	Lat          float32     `json:"lat"`
-	Long         float32     `json:"long"`
-	CreatedAt    time.Time   `json:"created_at"`
-	AvgRate      interface{} `json:"avg_rate"`
-	ReviewsCount int64       `json:"reviews_count"`
-	Distance     float32     `json:"distance"`
+	CenterID     int64     `json:"center_id"`
+	Name         string    `json:"name"`
+	Phone        string    `json:"phone"`
+	Image        string    `json:"image"`
+	Address      string    `json:"address"`
+	AreaID       int64     `json:"area_id"`
+	Lat          float32   `json:"lat"`
+	Long         float32   `json:"long"`
+	CreatedAt    time.Time `json:"created_at"`
+	AvgRate      float64   `json:"avg_rate"`
+	ReviewsCount int64     `json:"reviews_count"`
+	Distance     float32   `json:"distance"`
 }
 
 type Code struct {
@@ -151,6 +151,21 @@ type Winch struct {
 	Phone       string       `json:"phone"`
 	DriverName  string       `json:"driver_name"`
 	DriverPhone string       `json:"driver_phone"`
+	Lat         float32      `json:"lat"`
+	Long        float32      `json:"long"`
 	CreatedAt   time.Time    `json:"created_at"`
 	DeletedAt   sql.NullTime `json:"deleted_at"`
+}
+
+type WinchInfo struct {
+	WinchID     int64     `json:"winch_id"`
+	AreaID      int64     `json:"area_id"`
+	Name        string    `json:"name"`
+	Phone       string    `json:"phone"`
+	DriverName  string    `json:"driver_name"`
+	DriverPhone string    `json:"driver_phone"`
+	Lat         float32   `json:"lat"`
+	Long        float32   `json:"long"`
+	CreatedAt   time.Time `json:"created_at"`
+	Distance    float32   `json:"distance"`
 }

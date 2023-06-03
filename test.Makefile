@@ -4,7 +4,7 @@ createdb:
 	docker exec -it postgres  createdb --username=${DB_USER} --owner=${DB_USER} ${DB_NAME}
 
 dropdb:
-	docker exec -it postgres  dropdb --username=${DB_USER}   ${DB_NAME}
+	docker exec -it postgres  dropdb --username=${DB_USER}   ${DB_NAME} --force
 
 
 migrateup:

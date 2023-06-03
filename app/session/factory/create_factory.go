@@ -1,62 +1,58 @@
 package factory
 
 import (
+	"reflect"
+	"strings"
+
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/session"
 	db "github.com/darwishdev/obd_api/pkg/sqlc/gen"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"github.com/rs/zerolog/log"
 )
 
 func (f *SessionFactory) CreateGrpcFromSql(req *db.Session) (*obdv1.SessionCreateResponse, error) {
 	response := &obdv1.SessionCreateResponse{
-		Session: &obdv1.Session{
-			SessionId: int32(req.SessionID),
-			CarId:     int32(req.CarID),
-			IsLive:    req.IsLive,
-			CreatedAt: timestamppb.New(req.CreatedAt),
-		},
+		SessionId: int32(req.SessionID),
 	}
 
 	return response, nil
 }
 
-func (f *SessionFactory) AttachCodeSqlFromGrpc(req *obdv1.SessionAttachCodeRequest) (*db.SessionAttachCodeParams, error) {
-	request := &db.SessionAttachCodeParams{
-		SessionID: req.SessionId,
-		CodeID:    req.CodeId,
+func (f *SessionFactory) AttachCodesSqlFromGrpc(req *obdv1.SessionAttachCodesRequest) (*db.SessionAttachCodesParams, error) {
+	request := &db.SessionAttachCodesParams{
+		SessionID:    req.SessionId,
+		SessionCodes: req.Codes,
 	}
 
 	return request, nil
 }
-func (f *SessionFactory) AttachCodeGrpcFromSql(resp *db.SessionCode) (*obdv1.SessionAttachCodeResponse, error) {
-	response := &obdv1.SessionAttachCodeResponse{
-		Session: &obdv1.SessionCode{
-			SessionCodeId: int32(resp.SessionCodeID),
-			SessionId:     int32(resp.SessionID),
-			CodeId:        int32(resp.CodeID),
-		},
+
+func _extractOBDModel(metrics *obdv1.OBDModel) (string, string) {
+	var keys []string
+	var values []string
+	v := reflect.ValueOf(*metrics)
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		if field.Kind() == reflect.String && field.String() != "" {
+			keys = append(keys, v.Type().Field(i).Name)
+			values = append(values, field.String())
+		}
 	}
-
-	return response, nil
+	keyString := strings.Join(keys, ",")
+	valueString := strings.Join(values, ",")
+	return keyString, valueString
 }
+func (f *SessionFactory) AttachValuesSqlFromGrpc(req *obdv1.SessionAttachValuesRequest) (*db.SessionAttachValuesParams, error) {
+	keys, values := _extractOBDModel(req.ObdModel)
 
-func (f *SessionFactory) AttachValueSqlFromGrpc(req *obdv1.SessionAttachValueRequest) (*db.SessionAttachValueParams, error) {
-	request := &db.SessionAttachValueParams{
-		SessionID: req.SessionId,
-		ValueKey:  req.ValueKey,
-		ValueData: req.ValueData,
+	log.Info().
+		Str("keys", keys).
+		Str("values", values).
+		Msg("delete me")
+	request := &db.SessionAttachValuesParams{
+		SessionID:     req.SessionId,
+		SessionKeys:   keys,
+		SessionValues: values,
 	}
 
 	return request, nil
-}
-func (f *SessionFactory) AttachValueGrpcFromSql(resp *db.SessionValue) (*obdv1.SessionAttachValueResponse, error) {
-	response := &obdv1.SessionAttachValueResponse{
-		Session: &obdv1.SessionValue{
-			SessionValueId: int32(resp.SessionValueID),
-			SessionId:      int32(resp.SessionID),
-			ValueKey:       resp.ValueKey,
-			ValueData:      resp.ValueData,
-		},
-	}
-
-	return response, nil
 }

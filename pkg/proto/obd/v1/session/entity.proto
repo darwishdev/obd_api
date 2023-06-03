@@ -7,8 +7,10 @@ message Session {
     int32 session_id = 1;
     int32 car_id = 2;
     bool is_live = 3;
-    google.protobuf.Timestamp created_at = 4;
-    google.protobuf.Timestamp finished_at = 5;
+    int32 emergencies = 4;
+    int32 default_codes = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp finished_at = 7;
 }
 
 
@@ -16,8 +18,10 @@ message Code {
     int32 code_id = 1;
     int32 car_brand_model_id = 2;
     string code_name = 3;
-    string description = 4;
-    bool is_emergency = 5;
+    string VehiclePart = 4;
+    string CodeType = 5;
+    string description = 6;
+    bool is_emergency = 7;
 }
 
 message SessionValue {

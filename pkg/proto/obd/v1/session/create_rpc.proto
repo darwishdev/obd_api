@@ -9,36 +9,52 @@ message SessionCreateRequest {
 
 
 message SessionCreateResponse {
-    Session Session = 1;
+    int32 session_id = 1;
 }
 
 
 
 
 // attach codes
-message SessionAttachCodeRequest {
+message SessionAttachCodesRequest {
     int64 session_id = 1;
-    int64 code_id =2; 
+    string codes =2; 
 }
 
 
-message SessionAttachCodeResponse {
-    SessionCode Session = 1;
+message SessionAttachCodesResponse {
+    bool created = 1;
 }
-
 
 
 
 // attach values
-message SessionAttachValueRequest {
-    int64 session_id = 1;
+message SessionVaue {
     string value_key =2; 
     string value_data =3; 
 }
 
 
-message SessionAttachValueResponse {
-    SessionValue Session = 1;
+
+
+message OBDModel {
+    string speed = 1;
+    string rpm = 2;
+    string air_intake_temp = 3;
+    string engine_load = 7;
+    string module_voltage = 8;
+  }
+  
+  
+// attach values
+message SessionAttachValuesRequest {
+    int64 session_id = 1;
+    OBDModel obd_model =2;
+}
+
+
+message SessionAttachValuesResponse {
+    bool created = 1;
 }
 
 

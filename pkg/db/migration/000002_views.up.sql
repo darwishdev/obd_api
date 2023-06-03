@@ -31,13 +31,13 @@ SELECT
   c.center_id,
   c.name,
   c.phone,
-  c.location,
+  c.image,
   c.address,
   c.area_id,
   c.lat,
   c.long,
   c.created_at,
-  COALESCE(AVG(r.rate) , 0) avg_rate,
+  CAST(COALESCE(AVG(r.rate) , 0) AS float) avg_rate,
   COUNT(r.review_id) reviews_count,
   CAST(0 AS float4) distance
 FROM
@@ -49,9 +49,26 @@ GROUP BY
   c.center_id,
   c.name,
   c.phone,
-  c.location,
+  c.image,
   c.address,
   c.area_id,
   c.lat,
   c.long,
   c.created_at;
+
+CREATE VIEW winch_info AS
+SELECT
+  w.winch_id,
+  w.area_id,
+  w.name,
+  w.phone,
+  w.driver_name,
+  w.driver_phone,
+  w.lat,
+  w.long,
+  w.created_at,
+  CAST(0 AS float4) distance
+FROM
+  winch w
+WHERE
+  w.deleted_at IS NULL

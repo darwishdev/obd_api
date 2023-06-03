@@ -15,6 +15,6 @@ func (u *UserUsecase) UserAuthorize(ctx context.Context, req int64) (*obdv1.User
 	if err != nil {
 		return nil, err
 	}
-
+	resp.LoginInfo = u.generateUserToken(record.Email, record.UserID, record.CarID.Int64)
 	return resp, nil
 }

@@ -20,8 +20,8 @@ func (repo *SessionRepo) SessionCreate(ctx context.Context, req *db.SessionCreat
 	return &resp, nil
 }
 
-func (repo *SessionRepo) SessionAttachCode(ctx context.Context, req *db.SessionAttachCodeParams) (*db.SessionCode, error) {
-	resp, err := repo.store.SessionAttachCode(context.Background(), *req)
+func (repo *SessionRepo) SessionAttachCodes(ctx context.Context, req *db.SessionAttachCodesParams) (*[]db.SessionCode, error) {
+	resp, err := repo.store.SessionAttachCodes(context.Background(), *req)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok {
 			return nil, validator.ParseWriteDbErrMsg(pqErr)
@@ -32,8 +32,8 @@ func (repo *SessionRepo) SessionAttachCode(ctx context.Context, req *db.SessionA
 	return &resp, nil
 }
 
-func (repo *SessionRepo) SessionAttachValue(ctx context.Context, req *db.SessionAttachValueParams) (*db.SessionValue, error) {
-	resp, err := repo.store.SessionAttachValue(context.Background(), *req)
+func (repo *SessionRepo) SessionAttachValues(ctx context.Context, req *db.SessionAttachValuesParams) (*[]db.SessionValue, error) {
+	resp, err := repo.store.SessionAttachValues(context.Background(), *req)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok {
 			return nil, validator.ParseWriteDbErrMsg(pqErr)

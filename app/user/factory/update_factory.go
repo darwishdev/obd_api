@@ -62,7 +62,6 @@ func (f *UserFactory) NewUserUpdateFromSqlResponse(resp *db.User) (*obdv1.UserUp
 			Name:      resp.Name,
 			Phone:     resp.Phone,
 			Email:     resp.Email,
-			Password:  resp.Password,
 			CreatedAt: timestamppb.New(resp.CreatedAt),
 			DeletedAt: timestamppb.New(resp.DeletedAt.Time),
 		},

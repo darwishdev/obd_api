@@ -46,9 +46,10 @@ type ObdClient interface {
 	ReviewsList(context.Context, *connect_go.Request[review.ReviewsListRequest]) (*connect_go.Response[review.ReviewsListResponse], error)
 	ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error)
 	SessionCreate(context.Context, *connect_go.Request[session.SessionCreateRequest]) (*connect_go.Response[session.SessionCreateResponse], error)
-	SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error)
-	SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error)
+	SessionAttachCodes(context.Context, *connect_go.Request[session.SessionAttachCodesRequest]) (*connect_go.Response[session.SessionAttachCodesResponse], error)
+	SessionAttachValues(context.Context, *connect_go.Request[session.SessionAttachValuesRequest]) (*connect_go.Response[session.SessionAttachValuesResponse], error)
 	SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error)
+	SessionGetCodes(context.Context, *connect_go.Request[session.SessionGetCodesRequest]) (*connect_go.Response[session.SessionGetCodesResponse], error)
 	SessionClose(context.Context, *connect_go.Request[session.SessionCloseRequest]) (*connect_go.Response[session.SessionCloseResponse], error)
 }
 
@@ -122,19 +123,24 @@ func NewObdClient(httpClient connect_go.HTTPClient, baseURL string, opts ...conn
 			baseURL+"/obd.v1.Obd/SessionCreate",
 			opts...,
 		),
-		sessionAttachCode: connect_go.NewClient[session.SessionAttachCodeRequest, session.SessionAttachCodeResponse](
+		sessionAttachCodes: connect_go.NewClient[session.SessionAttachCodesRequest, session.SessionAttachCodesResponse](
 			httpClient,
-			baseURL+"/obd.v1.Obd/SessionAttachCode",
+			baseURL+"/obd.v1.Obd/SessionAttachCodes",
 			opts...,
 		),
-		sessionAttachValue: connect_go.NewClient[session.SessionAttachValueRequest, session.SessionAttachValueResponse](
+		sessionAttachValues: connect_go.NewClient[session.SessionAttachValuesRequest, session.SessionAttachValuesResponse](
 			httpClient,
-			baseURL+"/obd.v1.Obd/SessionAttachValue",
+			baseURL+"/obd.v1.Obd/SessionAttachValues",
 			opts...,
 		),
 		sessionsList: connect_go.NewClient[session.SessionsListRequest, session.SessionsListResponse](
 			httpClient,
 			baseURL+"/obd.v1.Obd/SessionsList",
+			opts...,
+		),
+		sessionGetCodes: connect_go.NewClient[session.SessionGetCodesRequest, session.SessionGetCodesResponse](
+			httpClient,
+			baseURL+"/obd.v1.Obd/SessionGetCodes",
 			opts...,
 		),
 		sessionClose: connect_go.NewClient[session.SessionCloseRequest, session.SessionCloseResponse](
@@ -147,22 +153,23 @@ func NewObdClient(httpClient connect_go.HTTPClient, baseURL string, opts ...conn
 
 // obdClient implements ObdClient.
 type obdClient struct {
-	userCreate         *connect_go.Client[user.UserCreateRequest, user.UserCreateResponse]
-	userLogin          *connect_go.Client[user.UserLoginRequest, user.UserLoginResponse]
-	userUpdate         *connect_go.Client[user.UserUpdateRequest, user.UserUpdateResponse]
-	userAuthorize      *connect_go.Client[emptypb.Empty, user.UserAuthorizeResponse]
-	carBrandsList      *connect_go.Client[car.BrandsListRequest, car.BrandsListResponse]
-	carCreate          *connect_go.Client[car.CarCreateRequest, car.CarCreateResponse]
-	carUpdate          *connect_go.Client[car.CarUpdateRequest, car.CarUpdateResponse]
-	centersList        *connect_go.Client[center.CentersListRequest, center.CentersListResponse]
-	winchList          *connect_go.Client[winch.WinchListRequest, winch.WinchListResponse]
-	reviewsList        *connect_go.Client[review.ReviewsListRequest, review.ReviewsListResponse]
-	reviewCreate       *connect_go.Client[review.ReviewCreateRequest, review.ReviewCreateResponse]
-	sessionCreate      *connect_go.Client[session.SessionCreateRequest, session.SessionCreateResponse]
-	sessionAttachCode  *connect_go.Client[session.SessionAttachCodeRequest, session.SessionAttachCodeResponse]
-	sessionAttachValue *connect_go.Client[session.SessionAttachValueRequest, session.SessionAttachValueResponse]
-	sessionsList       *connect_go.Client[session.SessionsListRequest, session.SessionsListResponse]
-	sessionClose       *connect_go.Client[session.SessionCloseRequest, session.SessionCloseResponse]
+	userCreate          *connect_go.Client[user.UserCreateRequest, user.UserCreateResponse]
+	userLogin           *connect_go.Client[user.UserLoginRequest, user.UserLoginResponse]
+	userUpdate          *connect_go.Client[user.UserUpdateRequest, user.UserUpdateResponse]
+	userAuthorize       *connect_go.Client[emptypb.Empty, user.UserAuthorizeResponse]
+	carBrandsList       *connect_go.Client[car.BrandsListRequest, car.BrandsListResponse]
+	carCreate           *connect_go.Client[car.CarCreateRequest, car.CarCreateResponse]
+	carUpdate           *connect_go.Client[car.CarUpdateRequest, car.CarUpdateResponse]
+	centersList         *connect_go.Client[center.CentersListRequest, center.CentersListResponse]
+	winchList           *connect_go.Client[winch.WinchListRequest, winch.WinchListResponse]
+	reviewsList         *connect_go.Client[review.ReviewsListRequest, review.ReviewsListResponse]
+	reviewCreate        *connect_go.Client[review.ReviewCreateRequest, review.ReviewCreateResponse]
+	sessionCreate       *connect_go.Client[session.SessionCreateRequest, session.SessionCreateResponse]
+	sessionAttachCodes  *connect_go.Client[session.SessionAttachCodesRequest, session.SessionAttachCodesResponse]
+	sessionAttachValues *connect_go.Client[session.SessionAttachValuesRequest, session.SessionAttachValuesResponse]
+	sessionsList        *connect_go.Client[session.SessionsListRequest, session.SessionsListResponse]
+	sessionGetCodes     *connect_go.Client[session.SessionGetCodesRequest, session.SessionGetCodesResponse]
+	sessionClose        *connect_go.Client[session.SessionCloseRequest, session.SessionCloseResponse]
 }
 
 // UserCreate calls obd.v1.Obd.UserCreate.
@@ -225,19 +232,24 @@ func (c *obdClient) SessionCreate(ctx context.Context, req *connect_go.Request[s
 	return c.sessionCreate.CallUnary(ctx, req)
 }
 
-// SessionAttachCode calls obd.v1.Obd.SessionAttachCode.
-func (c *obdClient) SessionAttachCode(ctx context.Context, req *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error) {
-	return c.sessionAttachCode.CallUnary(ctx, req)
+// SessionAttachCodes calls obd.v1.Obd.SessionAttachCodes.
+func (c *obdClient) SessionAttachCodes(ctx context.Context, req *connect_go.Request[session.SessionAttachCodesRequest]) (*connect_go.Response[session.SessionAttachCodesResponse], error) {
+	return c.sessionAttachCodes.CallUnary(ctx, req)
 }
 
-// SessionAttachValue calls obd.v1.Obd.SessionAttachValue.
-func (c *obdClient) SessionAttachValue(ctx context.Context, req *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error) {
-	return c.sessionAttachValue.CallUnary(ctx, req)
+// SessionAttachValues calls obd.v1.Obd.SessionAttachValues.
+func (c *obdClient) SessionAttachValues(ctx context.Context, req *connect_go.Request[session.SessionAttachValuesRequest]) (*connect_go.Response[session.SessionAttachValuesResponse], error) {
+	return c.sessionAttachValues.CallUnary(ctx, req)
 }
 
 // SessionsList calls obd.v1.Obd.SessionsList.
 func (c *obdClient) SessionsList(ctx context.Context, req *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error) {
 	return c.sessionsList.CallUnary(ctx, req)
+}
+
+// SessionGetCodes calls obd.v1.Obd.SessionGetCodes.
+func (c *obdClient) SessionGetCodes(ctx context.Context, req *connect_go.Request[session.SessionGetCodesRequest]) (*connect_go.Response[session.SessionGetCodesResponse], error) {
+	return c.sessionGetCodes.CallUnary(ctx, req)
 }
 
 // SessionClose calls obd.v1.Obd.SessionClose.
@@ -259,9 +271,10 @@ type ObdHandler interface {
 	ReviewsList(context.Context, *connect_go.Request[review.ReviewsListRequest]) (*connect_go.Response[review.ReviewsListResponse], error)
 	ReviewCreate(context.Context, *connect_go.Request[review.ReviewCreateRequest]) (*connect_go.Response[review.ReviewCreateResponse], error)
 	SessionCreate(context.Context, *connect_go.Request[session.SessionCreateRequest]) (*connect_go.Response[session.SessionCreateResponse], error)
-	SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error)
-	SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error)
+	SessionAttachCodes(context.Context, *connect_go.Request[session.SessionAttachCodesRequest]) (*connect_go.Response[session.SessionAttachCodesResponse], error)
+	SessionAttachValues(context.Context, *connect_go.Request[session.SessionAttachValuesRequest]) (*connect_go.Response[session.SessionAttachValuesResponse], error)
 	SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error)
+	SessionGetCodes(context.Context, *connect_go.Request[session.SessionGetCodesRequest]) (*connect_go.Response[session.SessionGetCodesResponse], error)
 	SessionClose(context.Context, *connect_go.Request[session.SessionCloseRequest]) (*connect_go.Response[session.SessionCloseResponse], error)
 }
 
@@ -332,19 +345,24 @@ func NewObdHandler(svc ObdHandler, opts ...connect_go.HandlerOption) (string, ht
 		svc.SessionCreate,
 		opts...,
 	))
-	mux.Handle("/obd.v1.Obd/SessionAttachCode", connect_go.NewUnaryHandler(
-		"/obd.v1.Obd/SessionAttachCode",
-		svc.SessionAttachCode,
+	mux.Handle("/obd.v1.Obd/SessionAttachCodes", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionAttachCodes",
+		svc.SessionAttachCodes,
 		opts...,
 	))
-	mux.Handle("/obd.v1.Obd/SessionAttachValue", connect_go.NewUnaryHandler(
-		"/obd.v1.Obd/SessionAttachValue",
-		svc.SessionAttachValue,
+	mux.Handle("/obd.v1.Obd/SessionAttachValues", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionAttachValues",
+		svc.SessionAttachValues,
 		opts...,
 	))
 	mux.Handle("/obd.v1.Obd/SessionsList", connect_go.NewUnaryHandler(
 		"/obd.v1.Obd/SessionsList",
 		svc.SessionsList,
+		opts...,
+	))
+	mux.Handle("/obd.v1.Obd/SessionGetCodes", connect_go.NewUnaryHandler(
+		"/obd.v1.Obd/SessionGetCodes",
+		svc.SessionGetCodes,
 		opts...,
 	))
 	mux.Handle("/obd.v1.Obd/SessionClose", connect_go.NewUnaryHandler(
@@ -406,16 +424,20 @@ func (UnimplementedObdHandler) SessionCreate(context.Context, *connect_go.Reques
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionCreate is not implemented"))
 }
 
-func (UnimplementedObdHandler) SessionAttachCode(context.Context, *connect_go.Request[session.SessionAttachCodeRequest]) (*connect_go.Response[session.SessionAttachCodeResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionAttachCode is not implemented"))
+func (UnimplementedObdHandler) SessionAttachCodes(context.Context, *connect_go.Request[session.SessionAttachCodesRequest]) (*connect_go.Response[session.SessionAttachCodesResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionAttachCodes is not implemented"))
 }
 
-func (UnimplementedObdHandler) SessionAttachValue(context.Context, *connect_go.Request[session.SessionAttachValueRequest]) (*connect_go.Response[session.SessionAttachValueResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionAttachValue is not implemented"))
+func (UnimplementedObdHandler) SessionAttachValues(context.Context, *connect_go.Request[session.SessionAttachValuesRequest]) (*connect_go.Response[session.SessionAttachValuesResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionAttachValues is not implemented"))
 }
 
 func (UnimplementedObdHandler) SessionsList(context.Context, *connect_go.Request[session.SessionsListRequest]) (*connect_go.Response[session.SessionsListResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionsList is not implemented"))
+}
+
+func (UnimplementedObdHandler) SessionGetCodes(context.Context, *connect_go.Request[session.SessionGetCodesRequest]) (*connect_go.Response[session.SessionGetCodesResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("obd.v1.Obd.SessionGetCodes is not implemented"))
 }
 
 func (UnimplementedObdHandler) SessionClose(context.Context, *connect_go.Request[session.SessionCloseRequest]) (*connect_go.Response[session.SessionCloseResponse], error) {

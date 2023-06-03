@@ -12,9 +12,10 @@ import (
 
 type SessionUsecaseInterface interface {
 	SessionCreate(ctx context.Context, req *obdv1.SessionCreateRequest, userId int64) (*obdv1.SessionCreateResponse, error)
-	SessionAttachValue(ctx context.Context, req *obdv1.SessionAttachValueRequest) (*obdv1.SessionAttachValueResponse, error)
-	SessionAttachCode(ctx context.Context, req *obdv1.SessionAttachCodeRequest) (*obdv1.SessionAttachCodeResponse, error)
+	SessionAttachCodes(ctx context.Context, req *obdv1.SessionAttachCodesRequest) (*obdv1.SessionAttachCodesResponse, error)
+	SessionAttachValues(ctx context.Context, req *obdv1.SessionAttachValuesRequest) (*obdv1.SessionAttachValuesResponse, error)
 	SessionsList(ctx context.Context, req *obdv1.SessionsListRequest) (*obdv1.SessionsListResponse, error)
+	SessionGetCodes(ctx context.Context, carId *int64) (*obdv1.SessionGetCodesResponse, error)
 }
 
 type SessionUsecase struct {

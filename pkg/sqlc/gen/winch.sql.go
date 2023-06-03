@@ -7,9 +7,16 @@ package db
 
 import (
 	"context"
-	"database/sql"
-	"time"
 )
+
+const winchClean = `-- name: WinchClean :exec
+DELETE FROM winch
+`
+
+func (q *Queries) WinchClean(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, winchClean)
+	return err
+}
 
 const winchCreate = `-- name: WinchCreate :one
 INSERT INTO
@@ -17,19 +24,23 @@ INSERT INTO
         area_id,
         name,
         phone,
+        lat,
+        long,
         driver_name,
         driver_phone
     )
 VALUES
-    ($1, $2, $3, $4, $5) RETURNING winch_id, area_id, name, phone, driver_name, driver_phone, created_at, deleted_at
+    ($1, $2, $3, $4, $5 , $6 , $7) RETURNING winch_id, area_id, name, phone, driver_name, driver_phone, lat, long, created_at, deleted_at
 `
 
 type WinchCreateParams struct {
-	AreaID      int64  `json:"area_id"`
-	Name        string `json:"name"`
-	Phone       string `json:"phone"`
-	DriverName  string `json:"driver_name"`
-	DriverPhone string `json:"driver_phone"`
+	AreaID      int64   `json:"area_id"`
+	Name        string  `json:"name"`
+	Phone       string  `json:"phone"`
+	Lat         float32 `json:"lat"`
+	Long        float32 `json:"long"`
+	DriverName  string  `json:"driver_name"`
+	DriverPhone string  `json:"driver_phone"`
 }
 
 func (q *Queries) WinchCreate(ctx context.Context, arg WinchCreateParams) (Winch, error) {
@@ -37,6 +48,8 @@ func (q *Queries) WinchCreate(ctx context.Context, arg WinchCreateParams) (Winch
 		arg.AreaID,
 		arg.Name,
 		arg.Phone,
+		arg.Lat,
+		arg.Long,
 		arg.DriverName,
 		arg.DriverPhone,
 	)
@@ -48,6 +61,8 @@ func (q *Queries) WinchCreate(ctx context.Context, arg WinchCreateParams) (Winch
 		&i.Phone,
 		&i.DriverName,
 		&i.DriverPhone,
+		&i.Lat,
+		&i.Long,
 		&i.CreatedAt,
 		&i.DeletedAt,
 	)
@@ -55,36 +70,23 @@ func (q *Queries) WinchCreate(ctx context.Context, arg WinchCreateParams) (Winch
 }
 
 const winchList = `-- name: WinchList :many
-SELECT
-    w.winch_id, w.area_id, w.name, w.phone, w.driver_name, w.driver_phone, w.created_at, w.deleted_at , a.name area_name
-FROM
-    winch w JOIN areas a ON w.area_id = a.area_id
-WHERE
-    a.area_id = $1
-    AND deleted_at IS NULL
+SELECT winch_id, area_id, name, phone, driver_name, driver_phone, lat, long, created_at, distance FROM find_winch($1, $2)
 `
 
-type WinchListRow struct {
-	WinchID     int64        `json:"winch_id"`
-	AreaID      int64        `json:"area_id"`
-	Name        string       `json:"name"`
-	Phone       string       `json:"phone"`
-	DriverName  string       `json:"driver_name"`
-	DriverPhone string       `json:"driver_phone"`
-	CreatedAt   time.Time    `json:"created_at"`
-	DeletedAt   sql.NullTime `json:"deleted_at"`
-	AreaName    string       `json:"area_name"`
+type WinchListParams struct {
+	InLat  float64 `json:"in_lat"`
+	InLong float64 `json:"in_long"`
 }
 
-func (q *Queries) WinchList(ctx context.Context, areaID int64) ([]WinchListRow, error) {
-	rows, err := q.db.QueryContext(ctx, winchList, areaID)
+func (q *Queries) WinchList(ctx context.Context, arg WinchListParams) ([]WinchInfo, error) {
+	rows, err := q.db.QueryContext(ctx, winchList, arg.InLat, arg.InLong)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []WinchListRow{}
+	items := []WinchInfo{}
 	for rows.Next() {
-		var i WinchListRow
+		var i WinchInfo
 		if err := rows.Scan(
 			&i.WinchID,
 			&i.AreaID,
@@ -92,9 +94,10 @@ func (q *Queries) WinchList(ctx context.Context, areaID int64) ([]WinchListRow, 
 			&i.Phone,
 			&i.DriverName,
 			&i.DriverPhone,
+			&i.Lat,
+			&i.Long,
 			&i.CreatedAt,
-			&i.DeletedAt,
-			&i.AreaName,
+			&i.Distance,
 		); err != nil {
 			return nil, err
 		}

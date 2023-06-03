@@ -44,7 +44,10 @@ SET
   phone = coalesce(sqlc.narg('phone'), phone),
   email = coalesce(sqlc.narg('email'), email),
   password = coalesce(sqlc.narg('password'), password),
-  password_changed_at = coalesce(sqlc.narg('password'), password_changed_at)
+  password_changed_at = CASE
+                          WHEN sqlc.narg('password') IS NULL THEN password_changed_at
+                          ELSE now()
+                        END
 WHERE
   user_id = sqlc.arg('user_id') RETURNING *;
 

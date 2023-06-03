@@ -58,7 +58,7 @@ BEGIN
         SELECT c.center_id,
                c.name,
                c.phone,
-               c.location,
+               c.image,
                c.address,
                c.area_id,
                c.lat,
@@ -74,3 +74,35 @@ BEGIN
     ORDER BY distance;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION find_winch(
+    in_lat float,
+    in_long float
+)
+RETURNS  SETOF winch_info AS $$
+BEGIN
+    RETURN QUERY
+    WITH winch_distances AS (
+        SELECT w.winch_id,
+                w.area_id,
+                w.name,
+                w.phone,
+                w.driver_name,
+                w.driver_phone,
+                w.lat,
+                w.long,
+                w.created_at,               
+                CAST(point(w.lat,w.long) <-> point(in_lat,in_long) AS float4) AS distance
+        FROM winch_info w
+    )
+    SELECT *
+    FROM winch_distances
+    ORDER BY distance;
+END;
+$$ LANGUAGE plpgsql;
+

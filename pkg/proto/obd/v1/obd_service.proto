@@ -31,8 +31,9 @@ service Obd {
     rpc ReviewsList (ReviewsListRequest) returns (ReviewsListResponse) {  }
     rpc ReviewCreate (ReviewCreateRequest) returns (ReviewCreateResponse) {  }
     rpc SessionCreate (SessionCreateRequest) returns (SessionCreateResponse) {  }
-    rpc SessionAttachCode (SessionAttachCodeRequest) returns (SessionAttachCodeResponse) {  }
-    rpc SessionAttachValue (SessionAttachValueRequest) returns (SessionAttachValueResponse) {  }
+    rpc SessionAttachCodes (SessionAttachCodesRequest) returns (SessionAttachCodesResponse) {  }
+    rpc SessionAttachValues (SessionAttachValuesRequest) returns (SessionAttachValuesResponse) {  }
     rpc SessionsList (SessionsListRequest) returns (SessionsListResponse) {  }
+    rpc SessionGetCodes (SessionGetCodesRequest) returns (SessionGetCodesResponse) {  }
     rpc SessionClose (SessionCloseRequest) returns (SessionCloseResponse) {  }
 }

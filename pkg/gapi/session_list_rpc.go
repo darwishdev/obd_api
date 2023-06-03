@@ -23,3 +23,19 @@ func (server *Server) SessionsList(ctx context.Context, req *connect.Request[obd
 	}
 	return connect.NewResponse(resp), nil
 }
+
+func (server *Server) SessionGetCodes(ctx context.Context, req *connect.Request[obdv1.SessionGetCodesRequest]) (*connect.Response[obdv1.SessionGetCodesResponse], error) {
+	if err := ctx.Err(); err != nil {
+		return nil, validator.InternalErr(err)
+	}
+	_, err := server.authorizeUser(req.Header())
+	if err != nil {
+		return nil, validator.UnauthErr(err)
+	}
+
+	resp, err := server.sessionUsecase.SessionGetCodes(ctx, &req.Msg.SessionId)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
+}

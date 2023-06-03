@@ -54,7 +54,6 @@ func (f *UserFactory) NewUserCreateFromSqlResponse(resp *db.UserInfo) (*obdv1.Us
 			Name:      resp.Name,
 			Phone:     resp.Phone,
 			Email:     resp.Email,
-			Password:  resp.Password,
 			CreatedAt: timestamppb.New(resp.CreatedAt),
 			DeletedAt: timestamppb.New(resp.DeletedAt.Time),
 		},

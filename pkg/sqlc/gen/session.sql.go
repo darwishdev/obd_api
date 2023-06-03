@@ -7,57 +7,87 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
 
-const sessionAttachCode = `-- name: SessionAttachCode :one
-INSERT INTO
-    "session_codes" (
-        session_id,
-        code_id
-    )
-VALUES
-    ($1  , $2) RETURNING session_code_id, session_id, code_id
+const sessionAttachCodes = `-- name: SessionAttachCodes :many
+WITH code_ids AS (
+  SELECT code_id FROM codes WHERE code_name = ANY(string_to_array($2, ','))
+)
+INSERT INTO session_codes (session_id, code_id)
+SELECT $1, code_id FROM code_ids RETURNING session_code_id, session_id, code_id
 `
 
-type SessionAttachCodeParams struct {
-	SessionID int64 `json:"session_id"`
-	CodeID    int64 `json:"code_id"`
+type SessionAttachCodesParams struct {
+	SessionID    int64  `json:"session_id"`
+	SessionCodes string `json:"session_codes"`
 }
 
-func (q *Queries) SessionAttachCode(ctx context.Context, arg SessionAttachCodeParams) (SessionCode, error) {
-	row := q.db.QueryRowContext(ctx, sessionAttachCode, arg.SessionID, arg.CodeID)
-	var i SessionCode
-	err := row.Scan(&i.SessionCodeID, &i.SessionID, &i.CodeID)
-	return i, err
+func (q *Queries) SessionAttachCodes(ctx context.Context, arg SessionAttachCodesParams) ([]SessionCode, error) {
+	rows, err := q.db.QueryContext(ctx, sessionAttachCodes, arg.SessionID, arg.SessionCodes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []SessionCode{}
+	for rows.Next() {
+		var i SessionCode
+		if err := rows.Scan(&i.SessionCodeID, &i.SessionID, &i.CodeID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
-const sessionAttachValue = `-- name: SessionAttachValue :one
-INSERT INTO
-    "session_values" (
-        session_id,
-        value_key,
-        value_data
-    )
-VALUES
-    ($1 , $2 , $3) RETURNING session_value_id, session_id, value_key, value_data
+const sessionAttachValues = `-- name: SessionAttachValues :many
+INSERT INTO session_values (session_id, value_key, value_data)
+SELECT $1, t.key, u.data
+FROM unnest(string_to_array($2, ',')) WITH ORDINALITY AS t(key, n)
+JOIN unnest(string_to_array($3, ',')) WITH ORDINALITY AS u(data, n)
+ON t.n = u.n
+RETURNING session_value_id, session_id, value_key, value_data
 `
 
-type SessionAttachValueParams struct {
-	SessionID int64  `json:"session_id"`
-	ValueKey  string `json:"value_key"`
-	ValueData string `json:"value_data"`
+type SessionAttachValuesParams struct {
+	SessionID     int64  `json:"session_id"`
+	SessionKeys   string `json:"session_keys"`
+	SessionValues string `json:"session_values"`
 }
 
-func (q *Queries) SessionAttachValue(ctx context.Context, arg SessionAttachValueParams) (SessionValue, error) {
-	row := q.db.QueryRowContext(ctx, sessionAttachValue, arg.SessionID, arg.ValueKey, arg.ValueData)
-	var i SessionValue
-	err := row.Scan(
-		&i.SessionValueID,
-		&i.SessionID,
-		&i.ValueKey,
-		&i.ValueData,
-	)
-	return i, err
+func (q *Queries) SessionAttachValues(ctx context.Context, arg SessionAttachValuesParams) ([]SessionValue, error) {
+	rows, err := q.db.QueryContext(ctx, sessionAttachValues, arg.SessionID, arg.SessionKeys, arg.SessionValues)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []SessionValue{}
+	for rows.Next() {
+		var i SessionValue
+		if err := rows.Scan(
+			&i.SessionValueID,
+			&i.SessionID,
+			&i.ValueKey,
+			&i.ValueData,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const sessionClose = `-- name: SessionClose :one
@@ -110,25 +140,91 @@ func (q *Queries) SessionCreate(ctx context.Context, arg SessionCreateParams) (S
 	return i, err
 }
 
-const sessionsList = `-- name: SessionsList :many
-SELECT session_id, car_id, is_live, created_at, finished_at FROM "sessions" WHERE car_id = $1
+const sessionGetCodes = `-- name: SessionGetCodes :many
+SELECT c.code_id, c.car_brand_model_id, c.code_name, c.vehicle_part, c.code_type, c.description, c.is_emergency FROM session_codes sc JOIN codes c ON sc.code_id = c.code_id WHERE sc.session_id =  $1
 `
 
-func (q *Queries) SessionsList(ctx context.Context, carID int64) ([]Session, error) {
+func (q *Queries) SessionGetCodes(ctx context.Context, sessionID int64) ([]Code, error) {
+	rows, err := q.db.QueryContext(ctx, sessionGetCodes, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Code{}
+	for rows.Next() {
+		var i Code
+		if err := rows.Scan(
+			&i.CodeID,
+			&i.CarBrandModelID,
+			&i.CodeName,
+			&i.VehiclePart,
+			&i.CodeType,
+			&i.Description,
+			&i.IsEmergency,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const sessionsList = `-- name: SessionsList :many
+SELECT 
+    s.session_id,
+    s.car_id,
+    s.is_live,
+    s.created_at,
+    s.finished_at,
+    COUNT(e.*) emergencies,
+    COUNT(c.*) default_codes
+FROM "sessions"  AS s
+ 
+JOIN session_codes sc ON sc.session_id = s.session_id 
+LEFT JOIN codes  e ON sc.code_id = e.code_id  AND e.is_emergency = TRUE
+LEFT JOIN codes  c ON sc.code_id = c.code_id  AND c.is_emergency = FALSE
+WHERE car_id = $1
+GROUP BY 
+s.session_id,
+    s.car_id,
+    s.is_live,
+    s.created_at,
+    s.finished_at
+`
+
+type SessionsListRow struct {
+	SessionID    int64        `json:"session_id"`
+	CarID        int64        `json:"car_id"`
+	IsLive       bool         `json:"is_live"`
+	CreatedAt    time.Time    `json:"created_at"`
+	FinishedAt   sql.NullTime `json:"finished_at"`
+	Emergencies  int64        `json:"emergencies"`
+	DefaultCodes int64        `json:"default_codes"`
+}
+
+func (q *Queries) SessionsList(ctx context.Context, carID int64) ([]SessionsListRow, error) {
 	rows, err := q.db.QueryContext(ctx, sessionsList, carID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Session{}
+	items := []SessionsListRow{}
 	for rows.Next() {
-		var i Session
+		var i SessionsListRow
 		if err := rows.Scan(
 			&i.SessionID,
 			&i.CarID,
 			&i.IsLive,
 			&i.CreatedAt,
 			&i.FinishedAt,
+			&i.Emergencies,
+			&i.DefaultCodes,
 		); err != nil {
 			return nil, err
 		}

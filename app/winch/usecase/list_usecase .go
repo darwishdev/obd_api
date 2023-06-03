@@ -7,7 +7,11 @@ import (
 )
 
 func (u *WinchUsecase) WinchList(ctx context.Context, req *obdv1.WinchListRequest) (*obdv1.WinchListResponse, error) {
-	winches, err := u.repo.WinchList(ctx, &req.AreaId)
+	request, err := u.factory.ListSqlFromGrpc(req)
+	if err != nil {
+		return nil, err
+	}
+	winches, err := u.repo.WinchList(ctx, request)
 	if err != nil {
 		return nil, err
 	}

@@ -8,8 +8,24 @@ message Winch {
     int64 area_id = 2;
     string name = 3;
     string phone = 4;
-    string driver_name = 5;
-    string driver_phone = 6;
-    google.protobuf.Timestamp created_at = 7;
-    google.protobuf.Timestamp deleted_at = 8;
+    float lat = 5;
+    float long = 6;
+    string driver_name = 7;
+    string driver_phone = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp deleted_at = 10;
+}
+
+
+message WinchListRow {
+    int32 WinchID=1;
+    int32 AreaID=2;
+    string Name=3;
+    string Phone=4;
+    string DriverName=5;
+    string DriverPhone=6;
+    float Lat=7;
+    float Long=8;
+    google.protobuf.Timestamp CreatedAt=9;
+    float Distance=10;
 }

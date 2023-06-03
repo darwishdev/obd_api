@@ -6,7 +6,8 @@ import (
 )
 
 type WinchFactoryInterface interface {
-	ListGrpcFromSqlArr(req *[]db.WinchListRow) (*obdv1.WinchListResponse, error)
+	ListGrpcFromSqlArr(req *[]db.WinchInfo) (*obdv1.WinchListResponse, error)
+	ListSqlFromGrpc(req *obdv1.WinchListRequest) (*db.WinchListParams, error)
 }
 
 type WinchFactory struct {

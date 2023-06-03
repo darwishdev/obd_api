@@ -67,6 +67,13 @@ func ValidateUnsignedInt(value int64) error {
 	return nil
 }
 
+func ValidateUnsignedFloat(float float32) error {
+	if float < 0 {
+		return ErrorInvalid()
+	}
+	return nil
+}
+
 func ValidateInt(value int64, minLength int64, maxLength int64) error {
 	if value > maxLength || value < minLength {
 		return ErrorMinMax(float32(minLength), float32(maxLength))

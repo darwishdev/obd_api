@@ -4,28 +4,28 @@ package obd.v1;
 
 import "google/protobuf/timestamp.proto";
 message Center {
-    int64 center_id = 1;
+    int32 center_id = 1;
     string name = 2;
     string phone = 3;
-    string location = 4;
-    string address = 5;
-    int64 area_id = 6;
-    float lat = 7;
-    float long = 8;
-    google.protobuf.Timestamp created_at = 9;
-    google.protobuf.Timestamp deleted_at = 10;
+    string address = 4;
+    int32 area_id = 5;
+    float lat = 6;
+    float long = 7;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp deleted_at = 9;
 }
 
 message CenterListRow {
-    int64 center_id = 1;
+    int32 center_id = 1;
     string name = 2;
     string phone = 3;
-    string location = 4;
-    string address = 5;
-    int64 area_id = 6;
-    float lat = 7;
-    float long = 8;
-    float distance = 9;
-    google.protobuf.Timestamp created_at = 10;
-    google.protobuf.Timestamp deleted_at = 11;
+    string address = 4;
+    string image = 5;
+    int32 area_id = 6;
+    int32 rate = 7;
+    float lat = 8;
+    float long = 9;
+    float distance = 10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp deleted_at = 12;
 }

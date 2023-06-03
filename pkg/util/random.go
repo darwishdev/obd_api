@@ -73,3 +73,7 @@ func AddressToString(addr Address) string {
 func RandomAddress() string {
 	return AddressToString(GenerateRandomAddress())
 }
+
+func RandomLatLong() float32 {
+	return RandomFloat(1.0, 30.0)
+}

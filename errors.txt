@@ -2,3 +2,4 @@
 409:conflict , ex:entered already existed email or phone number
 400:bad request , [validation errors , no rows found ex:entering unexisted email on login]
 401:unauthorize [invalide token , expired token]
+400:pass_center_id_or_user_token

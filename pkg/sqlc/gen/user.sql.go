@@ -157,7 +157,10 @@ SET
   phone = coalesce($2, phone),
   email = coalesce($3, email),
   password = coalesce($4, password),
-  password_changed_at = coalesce($4, password_changed_at)
+  password_changed_at = CASE
+                          WHEN $4 IS NULL THEN password_changed_at
+                          ELSE now()
+                        END
 WHERE
   user_id = $5 RETURNING user_id, name, phone, email, password, password_changed_at, created_at, deleted_at
 `

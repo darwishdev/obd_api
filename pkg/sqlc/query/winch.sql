@@ -6,17 +6,17 @@ INSERT INTO
         area_id,
         name,
         phone,
+        lat,
+        long,
         driver_name,
         driver_phone
     )
 VALUES
-    ($1, $2, $3, $4, $5) RETURNING *;
+    ($1, $2, $3, $4, $5 , $6 , $7) RETURNING *;
 
 -- name: WinchList :many
-SELECT
-    w.* , a.name area_name
-FROM
-    winch w JOIN areas a ON w.area_id = a.area_id
-WHERE
-    a.area_id = $1
-    AND deleted_at IS NULL;
+SELECT * FROM find_winch($1, $2);
+
+
+-- name: WinchClean :exec
+DELETE FROM winch;

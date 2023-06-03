@@ -10,3 +10,13 @@ message SessionsListRequest {}
 message SessionsListResponse {
     repeated Session sessions = 1;
 }
+
+
+
+message SessionGetCodesRequest {
+    int64 session_id = 1;
+}
+    
+message SessionGetCodesResponse {
+    repeated Code codes = 1;
+}

@@ -6,6 +6,7 @@ import (
 	"github.com/bufbuild/connect-go"
 	obdv1 "github.com/darwishdev/obd_api/pkg/pb/obd/v1/car"
 	"github.com/darwishdev/obd_api/pkg/validator"
+	"github.com/rs/zerolog/log"
 )
 
 func (server *Server) CarUpdate(ctx context.Context, req *connect.Request[obdv1.CarUpdateRequest]) (*connect.Response[obdv1.CarUpdateResponse], error) {
@@ -17,7 +18,9 @@ func (server *Server) CarUpdate(ctx context.Context, req *connect.Request[obdv1.
 	if err != nil {
 		return nil, validator.UnauthErr(err)
 	}
-	resp, err := server.carUsecase.CarUpdate(ctx, req.Msg, authPayload.UserId)
+
+	log.Debug().Int64("car", authPayload.CarId).Msg("deleteme")
+	resp, err := server.carUsecase.CarUpdate(ctx, req.Msg, authPayload.CarId)
 	if err != nil {
 		return nil, err
 	}

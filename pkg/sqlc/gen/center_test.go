@@ -39,12 +39,11 @@ func createNewCenter() Center {
 func getValidCenter() CenterCreateParams {
 	address := util.GenerateRandomAddress()
 	return CenterCreateParams{
-		Name:     util.RandomName(),
-		Phone:    util.RandomPhone(),
-		Location: util.RandomURL(),
-		Address:  util.AddressToString(address),
-		Lat:      address.Lat,
-		Long:     address.Long,
+		Name:    util.RandomName(),
+		Phone:   util.RandomPhone(),
+		Address: util.AddressToString(address),
+		Lat:     address.Lat,
+		Long:    address.Long,
 	}
 }
 func TestCenterCreate(t *testing.T) {
@@ -65,13 +64,12 @@ func TestCenterCreate(t *testing.T) {
 			input:     validCenter,
 			expectErr: false,
 			expectedRes: Center{
-				Name:     validCenter.Name,
-				Phone:    validCenter.Phone,
-				Location: validCenter.Location,
-				Address:  validCenter.Address,
-				AreaID:   validCenter.AreaID,
-				Lat:      validCenter.Lat,
-				Long:     validCenter.Long,
+				Name:    validCenter.Name,
+				Phone:   validCenter.Phone,
+				Address: validCenter.Address,
+				AreaID:  validCenter.AreaID,
+				Lat:     validCenter.Lat,
+				Long:    validCenter.Long,
 			},
 		},
 		{
@@ -93,7 +91,6 @@ func TestCenterCreate(t *testing.T) {
 			}
 			if createdCenter.Name != tc.expectedRes.Name ||
 				createdCenter.Phone != tc.expectedRes.Phone ||
-				createdCenter.Location != tc.expectedRes.Location ||
 				createdCenter.Address != tc.expectedRes.Address ||
 				createdCenter.AreaID != tc.expectedRes.AreaID ||
 				createdCenter.Lat != tc.expectedRes.Lat ||

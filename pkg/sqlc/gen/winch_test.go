@@ -9,7 +9,7 @@ import (
 
 type wichsListTest struct {
 	name      string
-	areaID    int64
+	req       WinchListParams
 	expectLen int
 }
 
@@ -19,6 +19,8 @@ func getValidWinchCreate() WinchCreateParams {
 		Phone:       util.RandomPhone(),
 		DriverName:  util.RandomName(),
 		DriverPhone: util.RandomPhone(),
+		Lat:         util.RandomLatLong(),
+		Long:        util.RandomLatLong(),
 	}
 }
 func TestWinchList(t *testing.T) {
@@ -36,14 +38,12 @@ func TestWinchList(t *testing.T) {
 	// Define a slice of test cases
 	testcases := []wichsListTest{
 		{
-			name:      "ValidAreaID",
-			areaID:    validArea.AreaID,
+			name: "ValidAreaID",
+			req: WinchListParams{
+				InLat:  float64(util.RandomLatLong()),
+				InLong: float64(util.RandomLatLong()),
+			},
 			expectLen: 5,
-		},
-		{
-			name:      "NonExistentAreaID",
-			areaID:    area.AreaID + 10,
-			expectLen: 0,
 		},
 	}
 
@@ -52,16 +52,20 @@ func TestWinchList(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			// Call the WinchList function with the area ID from the current test case
-			wichs, err := testQueries.WinchList(context.Background(), tc.areaID)
+			winchs, err := testQueries.WinchList(context.Background(), tc.req)
 			if err != nil {
-				t.Fatalf("Failed to retrieve wichs: %v", err)
+				t.Fatalf("Failed to retrieve winchs: %v", err)
 			}
 
-			// If the current test case expects a certain number of wichs, check that the length of the
+			// If the current test case expects a certain number of winchs, check that the length of the
 			// returned slice matches the expected length
-			if len(wichs) != tc.expectLen {
-				t.Errorf("Expected %d wichs but got %d", tc.expectLen, len(wichs))
+			if len(winchs) != tc.expectLen {
+				t.Errorf("Expected %d winchs but got %d", tc.expectLen, len(winchs))
 			}
 		})
 	}
+
+	// clean up
+	testQueries.WinchClean(context.Background())
+
 }

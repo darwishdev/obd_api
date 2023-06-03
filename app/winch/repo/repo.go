@@ -7,7 +7,7 @@ import (
 )
 
 type WinchRepoInterface interface {
-	WinchList(ctx context.Context, req *int64) (*[]db.WinchListRow, error)
+	WinchList(ctx context.Context, req *db.WinchListParams) (*[]db.WinchInfo, error)
 }
 
 type WinchRepo struct {

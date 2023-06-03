@@ -11,8 +11,13 @@ import (
 )
 
 func (f *UserFactory) UserLoginRequestValidation(req *obdv1User.UserLoginRequest) error {
-	if err := validator.ValidateEmail(req.Email); err != nil {
-		return validator.InvalidArgErr(fmt.Errorf("email_%w", err))
+	var err error
+	err = validator.ValidateEmail(req.Email)
+	if err != nil {
+		err = validator.ValidatePhone(req.Email)
+		if err != nil {
+			return validator.InvalidArgErr(fmt.Errorf("email_%w", err))
+		}
 	}
 	if err := validator.ValidatePassword(req.Password); err != nil {
 		return validator.InvalidArgErr(fmt.Errorf("password_%w", err))
@@ -26,7 +31,6 @@ func (f *UserFactory) LoginGrpcFromSql(resp *db.UserInfo) (*obdv1User.UserLoginR
 			Name:      resp.Name,
 			Phone:     resp.Phone,
 			Email:     resp.Email,
-			Password:  resp.Password,
 			CreatedAt: timestamppb.New(resp.CreatedAt),
 			DeletedAt: timestamppb.New(resp.DeletedAt.Time),
 		},

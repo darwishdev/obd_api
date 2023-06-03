@@ -14,31 +14,28 @@ INSERT INTO
     centers (
         name,
         phone,
-        location,
         address,
         area_id,
         lat,
         long
     )
 VALUES
-    ($1, $2, $3, $4, $5, $6, $7) RETURNING center_id, name, phone, location, address, area_id, lat, long, created_at, deleted_at
+    ($1, $2, $3, $4, $5, $6) RETURNING center_id, name, phone, image, address, area_id, lat, long, created_at, deleted_at
 `
 
 type CenterCreateParams struct {
-	Name     string  `json:"name"`
-	Phone    string  `json:"phone"`
-	Location string  `json:"location"`
-	Address  string  `json:"address"`
-	AreaID   int64   `json:"area_id"`
-	Lat      float32 `json:"lat"`
-	Long     float32 `json:"long"`
+	Name    string  `json:"name"`
+	Phone   string  `json:"phone"`
+	Address string  `json:"address"`
+	AreaID  int64   `json:"area_id"`
+	Lat     float32 `json:"lat"`
+	Long    float32 `json:"long"`
 }
 
 func (q *Queries) CenterCreate(ctx context.Context, arg CenterCreateParams) (Center, error) {
 	row := q.db.QueryRowContext(ctx, centerCreate,
 		arg.Name,
 		arg.Phone,
-		arg.Location,
 		arg.Address,
 		arg.AreaID,
 		arg.Lat,
@@ -49,7 +46,7 @@ func (q *Queries) CenterCreate(ctx context.Context, arg CenterCreateParams) (Cen
 		&i.CenterID,
 		&i.Name,
 		&i.Phone,
-		&i.Location,
+		&i.Image,
 		&i.Address,
 		&i.AreaID,
 		&i.Lat,
@@ -61,7 +58,7 @@ func (q *Queries) CenterCreate(ctx context.Context, arg CenterCreateParams) (Cen
 }
 
 const centersList = `-- name: CentersList :many
-SELECT center_id, name, phone, location, address, area_id, lat, long, created_at, avg_rate, reviews_count, distance FROM 
+SELECT center_id, name, phone, image, address, area_id, lat, long, created_at, avg_rate, reviews_count, distance FROM 
     find_centers(
         $1,
         $2
@@ -86,7 +83,7 @@ func (q *Queries) CentersList(ctx context.Context, arg CentersListParams) ([]Cen
 			&i.CenterID,
 			&i.Name,
 			&i.Phone,
-			&i.Location,
+			&i.Image,
 			&i.Address,
 			&i.AreaID,
 			&i.Lat,

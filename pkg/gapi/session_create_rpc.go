@@ -24,22 +24,22 @@ func (server *Server) SessionCreate(ctx context.Context, req *connect.Request[ob
 	return connect.NewResponse(resp), nil
 }
 
-func (server *Server) SessionAttachCode(ctx context.Context, req *connect.Request[obdv1.SessionAttachCodeRequest]) (*connect.Response[obdv1.SessionAttachCodeResponse], error) {
+func (server *Server) SessionAttachCodes(ctx context.Context, req *connect.Request[obdv1.SessionAttachCodesRequest]) (*connect.Response[obdv1.SessionAttachCodesResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, validator.InternalErr(err)
 	}
-	resp, err := server.sessionUsecase.SessionAttachCode(ctx, req.Msg)
+	resp, err := server.sessionUsecase.SessionAttachCodes(ctx, req.Msg)
 	if err != nil {
 		return nil, err
 	}
 	return connect.NewResponse(resp), nil
 }
 
-func (server *Server) SessionAttachValue(ctx context.Context, req *connect.Request[obdv1.SessionAttachValueRequest]) (*connect.Response[obdv1.SessionAttachValueResponse], error) {
+func (server *Server) SessionAttachValues(ctx context.Context, req *connect.Request[obdv1.SessionAttachValuesRequest]) (*connect.Response[obdv1.SessionAttachValuesResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, validator.InternalErr(err)
 	}
-	resp, err := server.sessionUsecase.SessionAttachValue(ctx, req.Msg)
+	resp, err := server.sessionUsecase.SessionAttachValues(ctx, req.Msg)
 	if err != nil {
 		return nil, err
 	}

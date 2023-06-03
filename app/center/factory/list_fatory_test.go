@@ -15,11 +15,10 @@ func TestNewCenterFromSqlResponse(t *testing.T) {
 		CenterID:  1,
 		Name:      "Test Center",
 		Phone:     "123456789",
-		Location:  "Test Location",
 		Address:   "Test Address",
 		AreaID:    1,
-		Lat:       "123.456",
-		Long:      "456.789",
+		Lat:       123.456,
+		Long:      456.789,
 		CreatedAt: time.Date(2022, 4, 1, 0, 0, 0, 0, time.UTC),
 	}
 
@@ -27,11 +26,10 @@ func TestNewCenterFromSqlResponse(t *testing.T) {
 		CenterId:  1,
 		Name:      "Test Center",
 		Phone:     "123456789",
-		Location:  "Test Location",
 		Address:   "Test Address",
 		AreaId:    1,
-		Lat:       "123.456",
-		Long:      "456.789",
+		Lat:       123.456,
+		Long:      456.789,
 		CreatedAt: timestamppb.New(c.CreatedAt),
 		DeletedAt: nil,
 	}

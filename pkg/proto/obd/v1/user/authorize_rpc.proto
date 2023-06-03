@@ -8,4 +8,5 @@ import "google/protobuf/timestamp.proto";
 message UserAuthorizeResponse {
     User user = 1;
     CarView car = 2;
+    LoginInfo login_info = 3;
 }

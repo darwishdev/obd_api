@@ -244,11 +244,26 @@ func (mr *MockStoreMockRecorder) SessionCreate(arg0, arg1 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SessionCreate", reflect.TypeOf((*MockStore)(nil).SessionCreate), arg0, arg1)
 }
 
+// SessionGetCodes mocks base method.
+func (m *MockStore) SessionGetCodes(arg0 context.Context, arg1 int64) ([]db.Code, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SessionGetCodes", arg0, arg1)
+	ret0, _ := ret[0].([]db.Code)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SessionGetCodes indicates an expected call of SessionGetCodes.
+func (mr *MockStoreMockRecorder) SessionGetCodes(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SessionGetCodes", reflect.TypeOf((*MockStore)(nil).SessionGetCodes), arg0, arg1)
+}
+
 // SessionsList mocks base method.
-func (m *MockStore) SessionsList(arg0 context.Context, arg1 int64) ([]db.Session, error) {
+func (m *MockStore) SessionsList(arg0 context.Context, arg1 int64) ([]db.SessionsListRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SessionsList", arg0, arg1)
-	ret0, _ := ret[0].([]db.Session)
+	ret0, _ := ret[0].([]db.SessionsListRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

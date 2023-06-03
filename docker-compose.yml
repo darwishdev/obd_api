@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: obd_api
     volumes:
-      - ./app.env:/app/app.env
+      - ./cloud.env:/app/app.env
     image: obd_api
     ports:
       - 9091:9091
@@ -23,5 +23,5 @@ services:
 
 networks:
   default:
-    external:
-      name: postgres_network
+    name: postgres_network
+    external: true
